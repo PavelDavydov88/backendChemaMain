@@ -1,10 +1,31 @@
 import { Module } from '@nestjs/common';
 import { PersonController } from './person.controller';
 import { PersonService } from './person.service';
+import {SharedService} from "@app/shared/services/shared/shared.service";
+import {ConfigModule} from "@nestjs/config";
+import {SharedModule} from "@app/shared/modules/shared/shared.module";
+import {PostgresdbModule} from "@app/shared/modules/postgresdb/postgresdb.module";
+import {SequelizeModule} from "@nestjs/sequelize";
+import {Person} from "@app/shared/models/person.model";
 
 @Module({
-  imports: [],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: './.env',
+    }),
+    SharedModule,
+    PostgresdbModule,
+    SequelizeModule.forFeature([
+        Person
+    ])
+  ],
   controllers: [PersonController],
-  providers: [PersonService],
+  providers: [PersonService,
+    {
+      provide: 'SharedServiceInterface',
+      useClass: SharedService,
+    },
+  ],
 })
 export class PersonModule {}
