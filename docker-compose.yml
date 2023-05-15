@@ -33,7 +33,9 @@ services:
     depends_on:
       - rabbitmq
       - postgres
-      - other
+      - genre
+      - occupation
+      - country
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -48,25 +50,52 @@ services:
     depends_on:
       - rabbitmq
       - postgres
-      - other
+      - genre
+      - occupation
+      - country
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
     command: npm run start:dev person
-  other:
+  genre:
     build:
       context: ./
-      dockerfile: ./apps/auth/Dockerfile
+      dockerfile: ./apps/genre/Dockerfile
     env_file:
       - .env
     depends_on:
       - rabbitmq
       - postgres
-
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: npm run start:dev other
+    command: npm run start:dev genre
+  country:
+    build:
+      context: ./
+      dockerfile: ./apps/country/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - postgres
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev country
+  occupation:
+    build:
+      context: ./
+      dockerfile: ./apps/occupation/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - postgres
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev occupation
   api:
     build:
       context: ./
@@ -80,7 +109,7 @@ services:
       - auth
       - film
       - person
-      - other
+
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules

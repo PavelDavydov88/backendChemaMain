@@ -14,7 +14,9 @@ import {SharedService} from "@app/shared/services/shared/shared.service";
     }),
     SharedModule,
     PostgresdbModule,
-
+    SharedModule.registerRmq('GENRE_SERVICE', process.env.RABBITMQ_GENRE_QUEUE),
+    SharedModule.registerRmq('COUNTRY_SERVICE', process.env.RABBITMQ_COUNTRY_QUEUE),
+    SharedModule.registerRmq('OCCUPATION_SERVICE', process.env.RABBITMQ_OCCUPATION_QUEUE),
 
   ],
   controllers: [FilmController],

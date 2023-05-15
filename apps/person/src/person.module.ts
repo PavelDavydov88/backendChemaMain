@@ -18,7 +18,10 @@ import {Person} from "@app/shared/models/person.model";
     PostgresdbModule,
     SequelizeModule.forFeature([
         Person
-    ])
+    ]),
+    SharedModule.registerRmq('GENRE_SERVICE', process.env.RABBITMQ_GENRE_QUEUE),
+    SharedModule.registerRmq('COUNTRY_SERVICE', process.env.RABBITMQ_COUNTRY_QUEUE),
+    SharedModule.registerRmq('OCCUPATION_SERVICE', process.env.RABBITMQ_OCCUPATION_QUEUE),
   ],
   controllers: [PersonController],
   providers: [PersonService,

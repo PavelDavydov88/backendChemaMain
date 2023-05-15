@@ -8,11 +8,5 @@ export class AuthController {
   constructor(private readonly authService: AuthService,
               private readonly sharedService: SharedService) {}
 
-  @MessagePattern({ cmd: 'get-user' })
-  async getPersons(@Ctx() context: RmqContext){
-    // this.sharedService.acknowledgeMessage(context);
 
-    return this.authService.getAllPerson()
-
-  }
 }
