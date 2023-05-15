@@ -5,9 +5,6 @@ import {ConfigModule} from "@nestjs/config";
 import {SharedModule} from "@app/shared/modules/shared/shared.module";
 import {PostgresdbModule} from "@app/shared/modules/postgresdb/postgresdb.module";
 import {SharedService} from "@app/shared/services/shared/shared.service";
-import {SequelizeModule} from "@nestjs/sequelize";
-import {Genre} from "@app/shared/models/genre.model";
-import {Country} from "@app/shared/models/country.model";
 
 @Module({
   imports: [
@@ -17,9 +14,7 @@ import {Country} from "@app/shared/models/country.model";
     }),
     SharedModule,
     PostgresdbModule,
-    SequelizeModule.forFeature([
-      Country
-    ]),
+
 
   ],
   controllers: [CountryController],
