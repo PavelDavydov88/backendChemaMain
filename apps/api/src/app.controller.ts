@@ -1,4 +1,4 @@
-import {Controller, Get, Inject} from '@nestjs/common';
+import { Controller, Get, Inject, Param } from "@nestjs/common";
 import { AppService } from './app.service';
 import {ClientProxy} from "@nestjs/microservices";
 
@@ -6,6 +6,7 @@ import {ClientProxy} from "@nestjs/microservices";
 export class AppController {
   constructor(
               @Inject('AUTH_SERVICE') private readonly authService : ClientProxy,
+              @Inject('FILM_SERVICE') private readonly filmService : ClientProxy,
               ) {}
 
   @Get()
@@ -15,6 +16,17 @@ export class AppController {
           cmd: 'get-user'
         },
         {}
+    );
+  }
+
+  @Get('/film/:id')
+  async getFilmById(@Param("id") id: number){
+    console.log('id = ' + id);
+    return  this.filmService.send(
+      {
+        cmd: 'get-film'
+      },
+      id
     );
   }
 }

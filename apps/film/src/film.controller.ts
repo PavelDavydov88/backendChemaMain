@@ -1,12 +1,13 @@
 import { Controller, Get } from '@nestjs/common';
 import { FilmService } from './film.service';
+import { MessagePattern } from "@nestjs/microservices";
 
 @Controller()
 export class FilmController {
   constructor(private readonly filmService: FilmService) {}
 
-  @Get()
-  getHello(): string {
-    return this.filmService.getHello();
+  @MessagePattern({cmd :'get-film'})
+  async getFilmById(id : number){
+    return await this.filmService.getFilmById(id);
   }
 }
