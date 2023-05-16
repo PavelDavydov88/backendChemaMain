@@ -6,10 +6,10 @@ import {InjectModel} from "@nestjs/sequelize";
 export class PersonService {
   constructor(@InjectModel(Person) private personRepository: typeof Person) {
   }
-  // async getAllPerson(){
-  //   const persons =await this.personRepository.findAll({include{id: true}})
-  //   return persons
-  // }
+  async getAllPerson(){
+    const persons =await this.personRepository.findAll()
+    return persons
+  }
 
 
 

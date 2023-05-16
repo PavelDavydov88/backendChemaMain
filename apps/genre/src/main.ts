@@ -5,7 +5,7 @@ import {ConfigService} from "@nestjs/config";
 import {SharedService} from "@app/shared/services/shared/shared.service";
 
 async function bootstrap() {
-  const app = await NestFactory.create(CountryModule);
+  const app = await NestFactory.create(GenreModule);
 
   const configService = app.get(ConfigService);
   const sharedService = app.get(SharedService);

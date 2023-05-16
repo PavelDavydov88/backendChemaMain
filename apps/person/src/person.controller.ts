@@ -13,7 +13,7 @@ export class PersonController {
   async getPersons(@Ctx() context: RmqContext){
     this.sharedService.acknowledgeMessage(context);
 
-    // return this.personService.getAllPerson()
+    return this.personService.getAllPerson()
 
   }
 

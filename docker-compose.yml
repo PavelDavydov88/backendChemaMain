@@ -109,6 +109,7 @@ services:
       - auth
       - film
       - person
+      - genre
 
     volumes:
       - .:/usr/src/app
