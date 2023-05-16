@@ -57,7 +57,9 @@ services:
     depends_on:
       - rabbitmq
       - postgres
-      - other
+      - genre
+      - occupation
+      - country
 #    volumes:
 #      - .:/usr/src/app
 #      - /usr/src/app/node_modules
@@ -80,12 +82,14 @@ services:
     depends_on:
       - rabbitmq
       - postgres
-      - other
+      - genre
+      - occupation
+      - country
 #    volumes:
 #      - .:/usr/src/app
 #      - /usr/src/app/node_modules
     command: npm run start:dev person
-  other:
+  genre:
     deploy:
       resources:
         limits:
@@ -96,7 +100,49 @@ services:
           memory: 1G
     build:
       context: ./
-      dockerfile: ./apps/auth/Dockerfile
+      dockerfile: ./apps/genre/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - postgres
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev genre
+  country:
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    build:
+      context: ./
+      dockerfile: ./apps/country/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - rabbitmq
+      - postgres
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    command: npm run start:dev country
+  occupation:
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
+    build:
+      context: ./
+      dockerfile: ./apps/occupation/Dockerfile
     env_file:
       - .env
     depends_on:
@@ -128,7 +174,7 @@ services:
       - auth
       - film
       - person
-      - other
+      - genre
 #    volumes:
 #      - .:/usr/src/app
 #      - /usr/src/app/node_modules
