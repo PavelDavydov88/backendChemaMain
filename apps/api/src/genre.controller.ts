@@ -1,6 +1,5 @@
-import {Body, Controller, Delete, Get, Inject, Post, Put} from "@nestjs/common";
-import {SharedModule} from "@app/shared/modules/shared/shared.module";
-import {ClientProxy} from "@nestjs/microservices";
+import { Body, Controller, Delete, Get, Inject, Post, Put } from "@nestjs/common";
+import { ClientProxy } from "@nestjs/microservices";
 
 @Controller('genre')
 export class GenreController {

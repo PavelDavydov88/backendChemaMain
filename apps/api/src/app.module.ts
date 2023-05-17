@@ -4,6 +4,8 @@ import {ConfigModule} from "@nestjs/config";
 import {SharedModule} from "@app/shared/modules/shared/shared.module";
 import {GenreController} from "./genre.controller";
 import {CountryController} from "./country.controller";
+import { FilmController } from "./film.controller";
+import { OccupationController } from "./occupation.controller";
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -16,14 +18,9 @@ import {CountryController} from "./country.controller";
     SharedModule.registerRmq('GENRE_SERVICE', process.env.RABBITMQ_GENRE_QUEUE),
     SharedModule.registerRmq('COUNTRY_SERVICE', process.env.RABBITMQ_COUNTRY_QUEUE),
     SharedModule.registerRmq('OCCUPATION_SERVICE', process.env.RABBITMQ_OCCUPATION_QUEUE),
-
-
-
-
-
   ],
 
-  controllers: [AppController, GenreController, CountryController],
+  controllers: [AppController, GenreController, CountryController, FilmController, OccupationController],
 
 })
 export class AppModule {}
