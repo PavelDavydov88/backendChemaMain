@@ -4,14 +4,22 @@ services:
     image: rabbitmq:3.11.13-management
     container_name: rabbitmq
     hostname: rabbitmq
-    volumes:
-      - /var/lib/rabbitmq
+#    volumes:
+#      - /var/lib/rabbitmq
     ports:
       - '5672:5672'
       - '15672:15672'
     env_file:
       - .env
   auth:
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
     build:
       context: ./
       dockerfile: ./apps/auth/Dockerfile
@@ -20,11 +28,19 @@ services:
     depends_on:
       - rabbitmq
       - postgres
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
     command: npm run start:dev auth
   film:
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
     build:
       context: ./
       dockerfile: ./apps/film/Dockerfile
@@ -36,12 +52,20 @@ services:
       - genre
       - occupation
       - country
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
     command: npm run start:dev film
 
   person:
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
     build:
       context: ./
       dockerfile: ./apps/person/Dockerfile
@@ -53,11 +77,19 @@ services:
       - genre
       - occupation
       - country
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
     command: npm run start:dev person
   genre:
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
     build:
       context: ./
       dockerfile: ./apps/genre/Dockerfile
@@ -66,11 +98,19 @@ services:
     depends_on:
       - rabbitmq
       - postgres
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
     command: npm run start:dev genre
   country:
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+        reservations:
+          cpus: '0.5'
+          memory: 1G
     build:
       context: ./
       dockerfile: ./apps/country/Dockerfile
@@ -79,9 +119,9 @@ services:
     depends_on:
       - rabbitmq
       - postgres
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
     command: npm run start:dev country
   occupation:
     build:
@@ -116,18 +156,19 @@ services:
       - /usr/src/app/node_modules
     command: npm run start:dev api
   postgres:
-    image: postgres
+    container_name: postgres
+    image: postgres:14
     env_file:
       - .env
     ports:
       - '5432:5432'
-    volumes:
-      - ./db/data:/var/lib/postgresql/data
-  postgres_admin:
-    image: dpage/pgadmin4
-    depends_on:
-      - postgres
-    env_file:
-      - .env
-    ports:
-      - '15432:80'
+#    volumes:
+#      - ./db/data:/var/lib/postgresql/data
+#  postgres_admin:
+#    image: dpage/pgadmin4
+#    depends_on:
+#      - postgres
+#    env_file:
+#      - .env
+#    ports:
+#      - '15432:80'
