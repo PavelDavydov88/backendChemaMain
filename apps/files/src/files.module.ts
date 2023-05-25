@@ -1,10 +1,21 @@
 import { Module } from '@nestjs/common';
-import { FilesController } from './files.controller';
 import { FilesService } from './files.service';
+import { SharedModule } from "@app/shared/modules/shared/shared.module";
+import { ConfigModule } from "@nestjs/config";
+import { SharedService } from "@app/shared/services/shared/shared.service";
+import { FilesController } from "./files.controller";
 
 @Module({
-  imports: [],
+  imports: [ ConfigModule.forRoot({
+    isGlobal: true,
+    envFilePath: './.env',
+  }),
+    SharedModule,],
   controllers: [FilesController],
-  providers: [FilesService],
+  providers: [FilesService,
+    {
+      provide: 'SharedServiceInterface',
+      useClass: SharedService,
+    },],
 })
 export class FilesModule {}
