@@ -1,23 +1,20 @@
-import { Controller, Get } from '@nestjs/common';
+import {Controller, Get, UploadedFile, UseInterceptors} from '@nestjs/common';
 import { FilesService } from './files.service';
-import { MessagePattern, Payload } from "@nestjs/microservices";
-
+import {Ctx, MessagePattern, Payload} from "@nestjs/microservices";
+import {SharedService} from "@app/shared/services/shared/shared.service";
+import {FileInterceptor} from "@nestjs/platform-express";
 
 @Controller()
 export class FilesController {
-  constructor(private readonly filesService: FilesService) {}
+  constructor(private readonly filesService: FilesService,
+              private readonly sharedService: SharedService) {}
 
-  @MessagePattern({cmd :'get-files'})
-  async getFilmById(listPicture){
-    return await this.filesService.getPicture(listPicture);
-  }
+  @MessagePattern('createFile')
+  async createFile(@Ctx() content,@Payload() image: any){
+    console.log(image)
 
-  @MessagePattern({cmd :'creat-file'})
-  async creatFile(@Payload() image){
-
-    console.log('что-то пришло');
-    console.log(image);
-    // return await this.filesService.creatPicture(image);
-    return "ok"
+    await this.sharedService.acknowledgeMessage(content)
+    const create = await this.filesService.createFile(image)
+    return create
   }
 }

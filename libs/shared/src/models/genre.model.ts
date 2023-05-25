@@ -1,4 +1,5 @@
 import { Column, DataType, Model, Table } from "sequelize-typescript";
+import {ApiProperty} from "@nestjs/swagger";
 
 interface GenreCreationAttrs {
     name: string,
@@ -7,6 +8,7 @@ interface GenreCreationAttrs {
 
 @Table({tableName: 'genre', createdAt: false, updatedAt: false})
 export class Genre extends Model<Genre, GenreCreationAttrs> {
+    @ApiProperty({ example: '1', description: 'Уникальный индефикатор' })
     @Column({
         type: DataType.INTEGER,
         unique: true,

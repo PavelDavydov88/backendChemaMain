@@ -1,4 +1,5 @@
 import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
+import {ApiProperty} from "@nestjs/swagger";
 
 
 interface PersonCreationAttrs {
@@ -9,6 +10,7 @@ interface PersonCreationAttrs {
 @Table({ tableName: "person", createdAt: false, updatedAt: false })
 export class Person extends Model<Person, PersonCreationAttrs> {
 
+    @ApiProperty({ example: '1', description: 'Уникальный индефикатор' })
     @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     id: number;
 

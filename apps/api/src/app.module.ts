@@ -46,7 +46,8 @@ import { CommentFilm } from "@app/shared/models/comment.model";
     FilmController,
     OccupationController,
     FilesController,
-    CommentController
+    CommentController,
+    PersonController
   ],
   providers: [AppService]
 

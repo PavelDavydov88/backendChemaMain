@@ -4,6 +4,7 @@ import {Genre} from "./genre.model";
 import {Country} from "./country.model";
 import {Person} from "./person.model";
 import {Occupation} from "./occupation.model";
+import {ApiProperty} from "@nestjs/swagger";
 
 interface FilmOccupationCreationAttrs {
     person_id: number,
@@ -13,6 +14,7 @@ interface FilmOccupationCreationAttrs {
 
 @Table({tableName: 'film_occupation', createdAt: false, updatedAt: false})
 export class FilmOccupation extends Model<FilmOccupation, FilmOccupationCreationAttrs> {
+    @ApiProperty({ example: '1', description: 'Уникальный индефикатор' })
     @Column({
         type: DataType.INTEGER,
         unique: true,
