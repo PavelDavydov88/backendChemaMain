@@ -2,6 +2,7 @@ import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-t
 import {Film} from "./film.model";
 import {Genre} from "./genre.model";
 import {Person} from "./person.model";
+import {ApiProperty} from "@nestjs/swagger";
 
 interface PersonBestFilmCreationAttrs {
     person_id: number,
@@ -10,6 +11,7 @@ interface PersonBestFilmCreationAttrs {
 
 @Table({tableName: 'person_BestFilm', createdAt: false, updatedAt: false})
 export class PersonBestFilm extends Model<PersonBestFilm, PersonBestFilmCreationAttrs> {
+    @ApiProperty({ example: '1', description: 'Уникальный индефикатор' })
     @Column({
         type: DataType.INTEGER,
         unique: true,

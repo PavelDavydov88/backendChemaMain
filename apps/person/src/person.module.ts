@@ -7,6 +7,9 @@ import {SharedModule} from "@app/shared/modules/shared/shared.module";
 import {PostgresdbModule} from "@app/shared/modules/postgresdb/postgresdb.module";
 import {SequelizeModule} from "@nestjs/sequelize";
 import {Person} from "@app/shared/models/person.model";
+import {PersonOccupation} from "@app/shared/models/person_occupation.model";
+import {PersonGenre} from "@app/shared/models/person_genre.model";
+import {PersonCountry} from "@app/shared/models/person_counrty.model";
 
 @Module({
   imports: [
@@ -17,7 +20,10 @@ import {Person} from "@app/shared/models/person.model";
     SharedModule,
     PostgresdbModule,
     SequelizeModule.forFeature([
-        Person
+        Person,
+        PersonOccupation,
+        PersonGenre,
+        PersonCountry
     ]),
     SharedModule.registerRmq('GENRE_SERVICE', process.env.RABBITMQ_GENRE_QUEUE),
     SharedModule.registerRmq('COUNTRY_SERVICE', process.env.RABBITMQ_COUNTRY_QUEUE),

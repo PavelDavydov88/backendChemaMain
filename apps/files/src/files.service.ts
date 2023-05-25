@@ -1,8 +1,26 @@
-import { Injectable } from '@nestjs/common';
-
+import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import * as path from "path";
+import * as fs from 'fs';
+import * as uuid from 'uuid';
 @Injectable()
 export class FilesService {
-  getHello(): string {
-    return 'Hello World!';
+  async createFile(file): Promise<string>{
+    try{
+      const fileName = uuid.v4()+ '.jpg';
+      const fileBuffer = Buffer.from(file.buffer.data)
+      const filePath = path.resolve(__dirname, '..', 'static')
+      // если такого пути нет, создать путь
+      if(!fs.existsSync(filePath)){
+        fs.mkdirSync(filePath, {recursive: true})
+      }
+      fs.writeFileSync(path.join(filePath, fileName), fileBuffer)
+
+      return fileName;
+
+    }catch (e){
+      throw new HttpException('произошла ошибка при записи файла', HttpStatus.INTERNAL_SERVER_ERROR)//серверная ошибка
+    }
+
   }
+
 }

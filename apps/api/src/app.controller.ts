@@ -9,15 +9,7 @@ export class AppController {
               @Inject('PERSON_SERVICE') private readonly personService: ClientProxy,
               ) {}
 
-  @Get()
-  getPersons() {
-    return this.personService.send(
-        {
-          cmd: 'get-persons'
-        },
-        {}
-    );
-  }
+
 
 
 }

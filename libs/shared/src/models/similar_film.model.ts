@@ -1,5 +1,6 @@
 import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
 import {Film} from "./film.model";
+import {ApiProperty} from "@nestjs/swagger";
 
 interface SimilarFilmCreationAttrs {
     film_id: number,
@@ -8,6 +9,7 @@ interface SimilarFilmCreationAttrs {
 
 @Table({tableName: 'similar_film', createdAt: false, updatedAt: false})
 export class SimilarFilm extends Model<SimilarFilm, SimilarFilmCreationAttrs> {
+    @ApiProperty({ example: '1', description: 'Уникальный индефикатор' })
     @Column({
         type: DataType.INTEGER,
         unique: true,
