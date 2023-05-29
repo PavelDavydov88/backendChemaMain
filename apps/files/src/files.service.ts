@@ -1,9 +1,7 @@
-import { Injectable, StreamableFile } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, StreamableFile } from "@nestjs/common";
 import * as path from "path";
-import * as fs from "fs";
-import { of } from "rxjs";
-import { createReadStream } from 'fs';
-import jimp from "jimp";
+import * as fs from 'fs';
+import * as uuid from 'uuid';
 
 @Injectable()
 export class FilesService {
@@ -34,5 +32,25 @@ export class FilesService {
     // console.log(jimpImageToBuffer);
     // return {"image" : b64};
     // return jimpImageToBuffer;
+  }
+
+  async creatPicture(image: any) {
+    console.log(JSON.stringify(image));
+    // try{
+    //   const fileName = uuid.v4()+ '.jpg';
+    //   const fileBuffer = Buffer.from(image.buffer.data)
+    //   const filePath = path.resolve(__dirname, '..', 'static')
+    //   // если такого пути нет, создать путь
+    //   if(!fs.existsSync(filePath)){
+    //     fs.mkdirSync(filePath, {recursive: true})
+    //   }
+    //   fs.writeFileSync(path.join(filePath, fileName), fileBuffer)
+    //
+    //   return fileName;
+    //
+    // }catch (e){
+    //   throw new HttpException('произошла ошибка при записи файла', HttpStatus.INTERNAL_SERVER_ERROR)//серверная ошибка
+    // }
+
   }
 }

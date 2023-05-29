@@ -12,6 +12,9 @@ import { Person } from "@app/shared/models/person.model";
 import { MainActor } from "@app/shared/models/main_actor.model";
 import { SimilarFilm } from "@app/shared/models/similar_film.model";
 import { CreatFilmDto } from "./dto/creatFilm.dto";
+import { UpdateFilmDto } from "./dto/updateFilm.dto";
+import { CreateOccupationDto } from "../../occupation/src/dto/createOccupation.dto";
+import { DeleteFilmDto } from "./dto/deleteFilm.dto";
 
 @Injectable()
 export class FilmService {
@@ -37,8 +40,6 @@ export class FilmService {
       attributes: [],
       include: [{ model: Country, attributes: ["name"], required: false }]
     });
-    // console.log('countryList = ' + countryList);
-    // console.log('country = ' + JSON.stringify(country, null, 2));
     response["country"] = country.map(country => {
       return country["country.name"];
     });
@@ -121,33 +122,6 @@ export class FilmService {
             where similar_film.film_id = ${id}`);
     response["similarFilms"] = similarFilms;
 
-    function getValue(val) {
-      // Создаём времменый массив с данными
-      const result = [];
-      let array = Object.values(val);
-      // Обрабатываем каждый элемент массива
-      for (const elem of array) {
-        // Если элемент массива объект то вызываем данную функцию с текущем объектом
-        // Используем continue что-бы не обратывать одни и те же данные 2 раза, можно испоользовать else
-        if ((typeof elem === "object") && (String(elem) == "person.picture_URL")) {
-          getValue(elem);
-          continue;
-        }
-        console.log(elem);
-        result.push(elem);
-      }
-      return result;
-    }
-
-    // const pictureList = response =>  response instanceof Object
-    //   // ? Object.values(response).flatMap(pictureList)
-    //   ? Object.values(response).map(pictureList)
-    //   : [ response ];
-
-    // const pictureList = getValue(response);
-    //
-    // response["pictureList"] =  pictureList ;
-    // console.log(pictureList(response));
     return response;
   }
 
@@ -192,6 +166,7 @@ export class FilmService {
 
 
   async creatFilm(creatFilmDto: CreatFilmDto) {
+    console.log("creatFilmDto = " + creatFilmDto);
     const getFilm = await this.filmRepository.findOne({
       where: { name: creatFilmDto.name }
     });
@@ -293,4 +268,21 @@ const idCountries : number[] = countries.filter(country => countriesFilm.include
     }
   }
 
+  async updateFilm(dto: UpdateFilmDto) {
+    const film = await this.filmRepository.findOne({ raw: true, where: { "name": dto.oldName } });
+    if (!film) return { statusCode: 404, error: "Not Found", message: `Film with name= ${dto.oldName} not found` };
+    return await this.filmRepository.update({name : dto.newName}, { where: { id: film.id } });
+  }
+
+  async deleteFilm(dto: DeleteFilmDto) {
+    const id = await this.filmRepository.findOne({ where: { name: dto.name } });
+    if (id) {
+        await this.filmRepository.destroy({ where: { id: id.id } });
+      console.log("id.picture_film = "+ id.picture_film);
+        return id.picture_film;
+    } else {
+      console.log("Такого фильма не существует");
+      return  new HttpException("Такого фильма не существует", HttpStatus.BAD_REQUEST);;
+    }
+  }
 }

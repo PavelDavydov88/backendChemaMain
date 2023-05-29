@@ -33,14 +33,14 @@ services:
 #      - /usr/src/app/node_modules
     command: npm run start:dev auth
   film:
-    deploy:
-      resources:
-        limits:
-          cpus: '1'
-          memory: 1G
-        reservations:
-          cpus: '0.5'
-          memory: 1G
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '1'
+#          memory: 1G
+#        reservations:
+#          cpus: '0.5'
+#          memory: 1G
     build:
       context: ./
       dockerfile: ./apps/film/Dockerfile
@@ -49,9 +49,9 @@ services:
     depends_on:
       - rabbitmq
       - postgres
-      - genre
-      - occupation
-      - country
+#      - genre
+#      - occupation
+#      - country
 #    volumes:
 #      - .:/usr/src/app
 #      - /usr/src/app/node_modules
@@ -137,6 +137,14 @@ services:
       - /usr/src/app/node_modules
     command: npm run start:dev occupation
   api:
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '1'
+#          memory: 1G
+#        reservations:
+#          cpus: '0.5'
+#          memory: 1G
     build:
       context: ./
       dockerfile: ./apps/api/Dockerfile
@@ -146,14 +154,14 @@ services:
       - .env
     depends_on:
       - rabbitmq
-      - auth
+#      - auth
       - film
-      - person
-      - genre
+#      - person
+#      - genre
 
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
     command: npm run start:dev api
   postgres:
     container_name: postgres
