@@ -31,8 +31,12 @@ export class AppService {
     }
   }
 
-  async deleteFile(response: Observable<string>) {
-    const namePicture = await response.subscribe();
-    console.log("namePicture = " + namePicture);
+  async deleteFile(name) {
+      const filePath = path.resolve(__dirname, '..','..', 'static', name);
+      fs.unlink(filePath,  err => {
+        if (err)  throw err // не удалось удалить файл
+      });
+
+      return "Файл успешно удалён"
   }
 }

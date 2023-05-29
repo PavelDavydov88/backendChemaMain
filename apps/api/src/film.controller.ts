@@ -16,7 +16,7 @@ import { FilterFilmDto } from "../../film/src/dto/filterFilm.dto";
 import { CreatFilmDto } from "../../film/src/dto/creatFilm.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { AppService } from "./app.service";
-import { Observable } from "rxjs";
+import { lastValueFrom } from "rxjs";
 
 @Controller("film")
 export class FilmController {
@@ -64,7 +64,7 @@ export class FilmController {
       }
     };
     creatFilmDto.picture_film = fileName;
-    console.log("creatFilmDto=" + creatFilmDto.name);
+    // console.log("creatFilmDto=" + creatFilmDto.name);
     const creatFilm = await this.filmService.send(
       {
         cmd: "creat-film"
@@ -88,17 +88,17 @@ export class FilmController {
       "delete-film",
       payload
     );
+    const nameFile = await lastValueFrom(response);
+    console.log("name = " + JSON.stringify(nameFile));
     try {
-      const name = await response.subscribe(a => a.toJSON())
-      console.log('name = ' + name);
-      // await this.appService.deleteFile(response);
+      if (typeof nameFile == "string") {
+        return await this.appService.deleteFile(nameFile);
+      }
+      return nameFile;
     }
-    catch (e){
-      console.log(e);
+    catch (e) {
+      return "Ошибка при удалении файла"
     }
-
-
-    return response;
   }
 
 }

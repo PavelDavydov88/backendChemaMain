@@ -282,7 +282,7 @@ const idCountries : number[] = countries.filter(country => countriesFilm.include
         return id.picture_film;
     } else {
       console.log("Такого фильма не существует");
-      return  new HttpException("Такого фильма не существует", HttpStatus.BAD_REQUEST);;
+      return new HttpException("Такого фильма не существует", HttpStatus.BAD_REQUEST);
     }
   }
 }
