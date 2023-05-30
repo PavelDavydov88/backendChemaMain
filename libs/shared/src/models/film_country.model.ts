@@ -1,6 +1,5 @@
 import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
 import {Film} from "./film.model";
-import {Genre} from "./genre.model";
 import {Country} from "./country.model";
 import {ApiProperty} from "@nestjs/swagger";
 

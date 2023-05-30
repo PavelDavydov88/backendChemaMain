@@ -14,4 +14,4 @@ async function bootstrap() {
   app.connectMicroservice(sharedService.getRmqOptions(queue));
   app.startAllMicroservices();
 }
-bootstrap();
+bootstrap(); 
