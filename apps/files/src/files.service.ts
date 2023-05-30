@@ -6,7 +6,8 @@ import * as uuid from 'uuid';
 export class FilesService {
   async createFile(file): Promise<string>{
     try{
-      const fileName = uuid.v4()+ '.jpg';
+      const fileName = file.originalname;
+      // console.log(fileName)
       const fileBuffer = Buffer.from(file.buffer.data)
       const filePath = path.resolve(__dirname, '..', 'static')
       // если такого пути нет, создать путь
