@@ -6,5 +6,10 @@ export class FilterFilmDto{
     readonly ratingMax : number;
     readonly limit : number;
     readonly offset : number;
+    readonly estimationMin : number;
+    readonly estimationMax : number;
+    readonly artist : string;
+    readonly writer : string;
+
 
 }
