@@ -9,7 +9,7 @@ interface PersonBestFilmCreationAttrs {
     film_id: number,
 }
 
-@Table({tableName: 'person_BestFilm', createdAt: false, updatedAt: false})
+@Table({tableName: 'person_best_film', createdAt: false, updatedAt: false})
 export class PersonBestFilm extends Model<PersonBestFilm, PersonBestFilmCreationAttrs> {
     @ApiProperty({ example: '1', description: 'Уникальный индефикатор' })
     @Column({
