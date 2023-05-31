@@ -14,7 +14,7 @@ import { SimilarFilm } from "@app/shared/models/similar_film.model";
 import { CreatFilmDto } from "./dto/creatFilm.dto";
 import { UpdateFilmDto } from "./dto/updateFilm.dto";
 import { DeleteFilmDto } from "./dto/deleteFilm.dto";
-import sequelize, { Op } from "sequelize";
+import sequelize, { Op, where } from "sequelize";
 
 @Injectable()
 export class FilmService {
@@ -365,4 +365,8 @@ export class FilmService {
     }
   }
 
+  async searchWriters(query: string) {
+    const writers = await this.personRepository.findAll({where: { name: { [Op.substring]: query } }, attributes : ["name"]});
+    return writers.map(person => person.name);
+  }
 }

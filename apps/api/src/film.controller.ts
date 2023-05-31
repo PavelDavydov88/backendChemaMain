@@ -52,6 +52,16 @@ export class FilmController {
     );
   }
 
+  @Get("/search/writers")
+  async searchWriters(@Query('query') query: string) {
+    return await this.filmService.send(
+      {
+        cmd: "search-writers"
+      },
+      query
+    );
+  }
+
   @Post()
   @UseInterceptors(FileInterceptor("image"))
   async creatFilm(@Body() creatFilmDto: CreatFilmDto, @UploadedFile() file) {

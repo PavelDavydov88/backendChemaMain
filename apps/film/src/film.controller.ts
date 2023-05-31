@@ -7,6 +7,7 @@ import { UpdateFilmDto } from "./dto/updateFilm.dto";
 import { SharedService } from "@app/shared/services/shared/shared.service";
 import { UpdateOccupationDto } from "../../occupation/src/dto/updateOccupation.dto";
 import { DeleteFilmDto } from "./dto/deleteFilm.dto";
+import { Person } from "@app/shared/models/person.model";
 
 @Controller()
 export class FilmController {
@@ -22,6 +23,11 @@ export class FilmController {
   @MessagePattern({ cmd: "get-films" })
   async getFilms(filterFilmDto: FilterFilmDto) {
     return await this.filmService.getFilms(filterFilmDto);
+  }
+
+  @MessagePattern({ cmd: "search-writers" })
+  async searchWriters(query: string) : Promise<Person[]> {
+    return await this.filmService.searchWriters(query);
   }
 
   @MessagePattern({ cmd: "creat-film" })
