@@ -26,7 +26,7 @@ export class FilmController {
   }
 
   @MessagePattern({ cmd: "search-writers" })
-  async searchWriters(query: string) : Promise<Person[]> {
+  async searchWriters(query: string) : Promise<string[]> {
     return await this.filmService.searchWriters(query);
   }
 

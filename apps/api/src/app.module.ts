@@ -9,7 +9,12 @@ import { OccupationController } from "./occupation.controller";
 import { FilesController } from "./files.controller";
 import { AppService } from "./app.service";
 import { ServeStaticModule } from "@nestjs/serve-static";
+import { CommentModule } from "./comment/comment.module";
 import * as path from "path";
+import { CommentController } from "./comment.controller";
+import { PostgresdbModule } from "@app/shared/modules/postgresdb/postgresdb.module";
+import { SequelizeModule } from "@nestjs/sequelize";
+import { CommentFilm } from "@app/shared/models/comment.model";
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -17,7 +22,7 @@ import * as path from "path";
     envFilePath: "./.env"
   }),
     ServeStaticModule.forRoot({
-      rootPath: path.resolve(__dirname, '..', '..', 'static')
+      rootPath: path.resolve(__dirname, "..", "..", "static")
     }),
     SharedModule.registerRmq("AUTH_SERVICE", process.env.RABBITMQ_AUTH_QUEUE),
     SharedModule.registerRmq("FILM_SERVICE", process.env.RABBITMQ_FILM_QUEUE),
@@ -26,6 +31,11 @@ import * as path from "path";
     SharedModule.registerRmq("COUNTRY_SERVICE", process.env.RABBITMQ_COUNTRY_QUEUE),
     SharedModule.registerRmq("OCCUPATION_SERVICE", process.env.RABBITMQ_OCCUPATION_QUEUE),
     SharedModule.registerRmq("FILES_SERVICE", process.env.RABBITMQ_FILES_QUEUE),
+    PostgresdbModule,
+    SequelizeModule.forFeature([
+      CommentFilm
+    ]),
+    CommentModule
 
   ],
 
@@ -35,9 +45,10 @@ import * as path from "path";
     CountryController,
     FilmController,
     OccupationController,
-    FilesController
+    FilesController,
+    CommentController
   ],
-  providers : [AppService]
+  providers: [AppService]
 
 })
 export class AppModule {
