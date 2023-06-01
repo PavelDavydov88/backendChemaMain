@@ -10,8 +10,39 @@ export class CommentService {
   }
 
   async getCommentsByFilmId(id: number) {
-    const comments = await this.commentFilmRepository.findAll({ where: { film_id: id } });
-    return comments;
+    const comments = await this.commentFilmRepository.findAll({ where: { film_id: id }, raw: true });
+    function buildHierarchy(arry) {
+
+      var roots = [], children = {};
+
+      // find the top level nodes and hash the children based on parent
+      for (var i = 0; i < arry.length; ++i) {
+        var item = arry[i],
+          p = item.parentCommentId,
+          target = !p ? roots : (children[p] || (children[p] = []));
+
+        target.push({ comment: item });
+      }
+
+      // function to recursively build the tree
+      var findChildren = function(parent) {
+        if (children[parent.comment.id]) {
+          parent.children = children[parent.comment.id];
+          for (var i = 0; i < parent.children.length; ++i) {
+            findChildren(parent.children[i]);
+          }
+        }
+      };
+
+      // enumerate through to handle the case where there are multiple roots
+      for (var i = 0; i < roots.length; ++i) {
+        findChildren(roots[i]);
+      }
+
+      return roots;
+    }
+
+    return buildHierarchy(comments);
   }
 
   async creatCommentFilm(creatCommentFilmDto: CreatCommentFilmDto) {
