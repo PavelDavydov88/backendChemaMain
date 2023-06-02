@@ -93,7 +93,7 @@ export class Film extends Model<Film, FilmCreationAttrs> {
 
     @ApiProperty({ example: '.png', description: 'картинка url' })
     @Column({ type: DataType.STRING, defaultValue : null})
-    picture_URL: string;
+    picture_film: string;
 
     @ApiProperty({ example: '.png', description: 'картинка local' })
     @Column({ type: DataType.STRING, defaultValue : null})

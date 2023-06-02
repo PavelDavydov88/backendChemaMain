@@ -36,7 +36,7 @@ export class Person extends Model<Person, PersonCreationAttrs> {
     count_film: number;
 
     @Column({ type: DataType.STRING, defaultValue : null})
-    picture_URL: string;
+    picture_person: string;
 
     @Column({ type: DataType.STRING, defaultValue : null})
     picture_local_URL: string;

@@ -24,6 +24,7 @@ import { CommentFilm } from "@app/shared/models/comment.model";
     ServeStaticModule.forRoot({
       rootPath: path.resolve(__dirname, "..", "..", "static")
     }),
+    FileModule,
     SharedModule.registerRmq("AUTH_SERVICE", process.env.RABBITMQ_AUTH_QUEUE),
     SharedModule.registerRmq("FILM_SERVICE", process.env.RABBITMQ_FILM_QUEUE),
     SharedModule.registerRmq("PERSON_SERVICE", process.env.RABBITMQ_PERSON_QUEUE),
@@ -35,7 +36,16 @@ import { CommentFilm } from "@app/shared/models/comment.model";
     SequelizeModule.forFeature([
       CommentFilm
     ]),
-    CommentModule
+    CommentModule,
+    SharedModule.registerRmq('FILE_SERVICE', process.env.RABBITMQ_FILE_QUEUE),
+    SharedModule.registerRmq('PROFILE_SERVICE', process.env.RABBITMQ_PROFILE_QUEUE),
+    JwtModule.registerAsync({
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get('PRIVATE_KEY'),
+        signOptions: { expiresIn: '3600s' },
+      }),
+      inject: [ConfigService],
+    }),
 
   ],
 
@@ -47,8 +57,10 @@ import { CommentFilm } from "@app/shared/models/comment.model";
     OccupationController,
     FilesController,
     CommentController,
-    PersonController
+    PersonController,
+    ProfileController,
   ],
+
   providers: [AppService]
 
 })

@@ -1,13 +1,15 @@
-import { Module } from "@nestjs/common";
+import {forwardRef, Module} from "@nestjs/common";
 import { AuthController } from "./auth.controller";
-import { AuthService } from "./auth.service";
-import { ConfigModule } from "@nestjs/config";
+import {ConfigModule, ConfigService} from "@nestjs/config";
 import { SharedModule } from "@app/shared/modules/shared/shared.module";
-import { PostgresdbModule } from "@app/shared/modules/postgresdb/postgresdb.module";
 import { SharedService } from "@app/shared/services/shared/shared.service";
-import { SequelizeModule } from "@nestjs/sequelize";
-import { PersonModule } from "../../person/src/person.module";
-import { Person } from "@app/shared/models/person.model";
+import {AuthService} from "./auth.service";
+import {PostgresdbModule} from "@app/shared/modules/postgresdb/postgresdb.module";
+import {JwtModule} from "@nestjs/jwt";
+import { ProfileModule } from './profile/profile.module';
+import { UserModule } from './user/user.module';
+import {RolesModule} from "./role/role.module";
+
 
 @Module({
   imports: [
@@ -15,13 +17,26 @@ import { Person } from "@app/shared/models/person.model";
       isGlobal: true,
       envFilePath: "./.env"
     }),
+
     SharedModule,
     PostgresdbModule,
-    SequelizeModule.forFeature([
-      Person
-    ]),
-    SharedModule,
-    PostgresdbModule
+    JwtModule.registerAsync({
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get('PRIVATE_KEY'),
+        signOptions: { expiresIn: '3600s' },
+      }),
+      inject: [ConfigService],
+    }),
+    UserModule,
+    forwardRef(() => ProfileModule),
+    RolesModule
+
+    // forwardRef(() => UserModule),
+
+    // forwardRef(() => SharedModule),
+    // forwardRef(() => PostgresdbModule)
+
+
 
 
   ],

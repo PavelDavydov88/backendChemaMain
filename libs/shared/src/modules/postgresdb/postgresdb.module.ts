@@ -46,7 +46,12 @@ import { CommentFilm } from "@app/shared/models/comment.model";
         SimilarFilm,
         PersonCountry,
         PersonOccupation,
-        CommentFilm],
+        CommentFilm,
+          Profile,
+          Role,
+          User,
+          UserRoles
+      ],
       autoLoadModels: true
 
 
