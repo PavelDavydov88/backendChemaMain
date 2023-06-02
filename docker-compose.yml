@@ -105,11 +105,13 @@ services:
     env_file:
       - .env
     depends_on:
-      - rabbitmq
       - auth
-      - film
+      - postgres
+      - rabbitmq
+#      - auth
+#      - film
       - person
-      - genre
+#      - genre
 
     volumes:
       - .:/usr/src/app

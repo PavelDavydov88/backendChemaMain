@@ -16,6 +16,11 @@ import {Genre} from "@app/shared/models/genre.model";
 import {PersonGenre} from "@app/shared/models/person_genre.model";
 import {Person} from "@app/shared/models/person.model";
 import {SimilarFilm} from "@app/shared/models/similar_film.model";
+import {Profile} from "@app/shared/models/profile.model";
+import {Roles} from "@app/shared/decorators/role-auth.decorator";
+import {Role} from "@app/shared/models/role.model";
+import {User} from "@app/shared/models/user.model";
+import {UserRoles} from "@app/shared/models/user-role.model";
 
 @Module({
     imports: [
@@ -44,7 +49,12 @@ import {SimilarFilm} from "@app/shared/models/similar_film.model";
                 PersonGenre,
                 SimilarFilm,
                 PersonCountry,
-                PersonOccupation,],
+                PersonOccupation,
+                Profile,
+                Role,
+                User,
+                UserRoles
+            ],
             autoLoadModels: true,
 
 
