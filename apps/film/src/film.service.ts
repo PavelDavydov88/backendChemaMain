@@ -1,5 +1,5 @@
 import { Film } from "@app/shared/models/film.model";
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { FilterFilmDto } from "./dto/filterFilm.dto";
 import { FilmCountry } from "@app/shared/models/film_country.model";
@@ -15,6 +15,7 @@ import { CreatFilmDto } from "./dto/creatFilm.dto";
 import { UpdateFilmDto } from "./dto/updateFilm.dto";
 import { DeleteFilmDto } from "./dto/deleteFilm.dto";
 import sequelize, { Op, where } from "sequelize";
+import { RpcException } from "@nestjs/microservices";
 
 @Injectable()
 export class FilmService {
@@ -33,7 +34,10 @@ export class FilmService {
 
   async getFilmById(id: number) {
     const response = await this.filmRepository.findOne({ raw: true, where: { "id": id } });
-    if (!response) return { statusCode: 404, error: "Not Found", message: `Film with Id=${id} not found` };
+
+    if (!response) throw new RpcException(
+      new NotFoundException("Такого фильма не существует!"));
+
     const country = await this.filmCountryRepository.findAll({
       where: { film_id: id },
       raw: true,
@@ -233,11 +237,8 @@ export class FilmService {
     for (let i = 1; i < response.length; i++) {
       distinctId = intersect(distinctId, response[i]);
     }
-    if ((distinctId == null) || (!distinctId.length)) return {
-      statusCode: 404,
-      error: "Not Found",
-      message: `Film with filters = ${JSON.stringify(filterFilmDto)} not found`
-    };
+    if ((distinctId == null) || (!distinctId.length)) throw new RpcException(
+      new NotFoundException(`Нет подходящих фильмов с такими условиями ${JSON.stringify(filterFilmDto)}!`));
 
     const finalFilmFilter : Film[] = await this.filmRepository.findAll({where: {"id" :distinctId}, offset : offset, limit : limit})
 
@@ -250,7 +251,8 @@ export class FilmService {
       where: { name: creatFilmDto.name }
     });
     if (getFilm)
-      throw new HttpException("такой фильм уже есть", HttpStatus.BAD_REQUEST);
+      throw new RpcException(
+        new NotFoundException(`Такой фильм уже есть`));
     const createFilm = await this.filmRepository.create(creatFilmDto);
     const countries = await this.countryRepository.findAll({ attributes: ["id", "name"], raw: true });
     const genres = await this.genreRepository.findAll({ attributes: ["id", "name"], raw: true });
@@ -349,7 +351,9 @@ export class FilmService {
 
   async updateFilm(dto: UpdateFilmDto) {
     const film = await this.filmRepository.findOne({ raw: true, where: { "name": dto.oldName } });
-    if (!film) return { statusCode: 404, error: "Not Found", message: `Film with name= ${dto.oldName} not found` };
+    if (!film) throw new RpcException(
+      new NotFoundException(`Такой фильм не найден!`));
+      // return { statusCode: 404, error: "Not Found", message: `Film with name= ${dto.oldName} not found` };
     return await this.filmRepository.update({ name: dto.newName }, { where: { id: film.id } });
   }
 
@@ -360,8 +364,8 @@ export class FilmService {
       console.log("id.picture_film = " + id.picture_film);
       return id.picture_film;
     } else {
-      console.log("Такого фильма не существует");
-      return new HttpException("Такого фильма не существует", HttpStatus.BAD_REQUEST);
+      throw new RpcException(
+        new NotFoundException(`Такой фильм не найден!`));
     }
   }
 

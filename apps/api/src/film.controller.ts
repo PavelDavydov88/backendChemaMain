@@ -11,12 +11,12 @@ import {
   UploadedFile,
   UseInterceptors
 } from "@nestjs/common";
-import { ClientProxy } from "@nestjs/microservices";
+import { ClientProxy, RpcException } from "@nestjs/microservices";
 import { FilterFilmDto } from "../../film/src/dto/filterFilm.dto";
 import { CreatFilmDto } from "../../film/src/dto/creatFilm.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { AppService } from "./app.service";
-import { lastValueFrom } from "rxjs";
+import { catchError, lastValueFrom, throwError } from "rxjs";
 
 @Controller("film")
 export class FilmController {
@@ -28,18 +28,17 @@ export class FilmController {
 
   @Get("/hi")
   async getHi() {
-    return "hello from film!";
+    return "hello from film controller!";
   }
 
   @Get("/:id")
   async getFilmById(@Param("id") id: number) {
-    console.log("id = " + id);
     return this.filmService.send(
       {
         cmd: "get-film"
       },
       id
-    );
+    ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
   @Get()
@@ -49,7 +48,7 @@ export class FilmController {
         cmd: "get-films"
       },
       filterFilmDto
-    );
+    ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
   @Get("/search/writers")
@@ -74,14 +73,12 @@ export class FilmController {
       }
     };
     creatFilmDto.picture_film = fileName;
-    // console.log("creatFilmDto=" + creatFilmDto.name);
-    const creatFilm = await this.filmService.send(
+    return this.filmService.send(
       {
         cmd: "creat-film"
       },
       creatFilmDto
-    );
-    return creatFilm;
+    ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
   @Put()
@@ -89,7 +86,7 @@ export class FilmController {
     return this.filmService.send(
       "update-film",
       payload
-    );
+    ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
   @Delete()
@@ -97,7 +94,7 @@ export class FilmController {
     const response = await this.filmService.send(
       "delete-film",
       payload
-    );
+    ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
     const nameFile = await lastValueFrom(response);
     console.log("name = " + JSON.stringify(nameFile));
     try {

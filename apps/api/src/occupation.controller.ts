@@ -1,7 +1,8 @@
 import { Body, Controller, Delete, Get, Inject, Post, Put } from "@nestjs/common";
-import { ClientProxy } from "@nestjs/microservices";
+import { ClientProxy, RpcException } from "@nestjs/microservices";
+import { catchError, throwError } from "rxjs";
 
-@Controller('occupation')
+@Controller("occupation")
 export class OccupationController {
   constructor(@Inject("OCCUPATION_SERVICE") private readonly occupationService: ClientProxy) {
   }
@@ -18,7 +19,7 @@ export class OccupationController {
     return this.occupationService.send(
       "createOccupation",
       payload
-    );
+    ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
   @Put()
@@ -26,7 +27,7 @@ export class OccupationController {
     return this.occupationService.send(
       "updateOccupation",
       payload
-    );
+    ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
   @Delete()
@@ -34,7 +35,7 @@ export class OccupationController {
     return this.occupationService.send(
       "deleteOccupation",
       payload
-    );
+    ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
 }
