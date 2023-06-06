@@ -13,13 +13,12 @@ export class UserRoles extends Model<UserRoles >{
     @Column({type: DataType.INTEGER, unique: true, autoIncrement:true, primaryKey: true})
     id: number;
 
+    @ApiProperty({ example: '1', description: 'внешний ключ, ссылается на ROLE' })
     @ForeignKey(() => Role) //ссылаемся еа таблицы role and user
     @Column({type: DataType.INTEGER}) //unique: true,
-
-
-
     roleId: number;
 
+    @ApiProperty({ example: '1', description: 'внешний ключ, ссылается на PROFILE' })
     @ForeignKey(() => User)
     @Column({type: DataType.INTEGER}) //unique: true,
     profileId: number;

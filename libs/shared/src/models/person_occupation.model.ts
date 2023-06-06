@@ -21,6 +21,7 @@ export class PersonOccupation extends Model<PersonOccupation, PersonGenreCreatio
   })
   id: number;
 
+  @ApiProperty({ example: '1', description: 'внешний ключ, ссылается на PERSON' })
   @ForeignKey(() => Person)
   @Column({type: DataType.INTEGER, unique: 'uniqueTag', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
   person_id: number;
@@ -28,6 +29,7 @@ export class PersonOccupation extends Model<PersonOccupation, PersonGenreCreatio
   @BelongsTo(() => Person)
   person: Person;
 
+  @ApiProperty({ example: '1', description: 'внешний ключ, ссылается на OCCUPATION' })
   @ForeignKey(() => Occupation)
   @Column({type: DataType.INTEGER, unique: 'uniqueTag', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
   occupation_id: number;

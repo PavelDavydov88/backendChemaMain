@@ -7,7 +7,7 @@ import {CountryController} from "./country.controller";
 import {PersonController} from "./person.controller";
 import {ServeStaticModule} from "@nestjs/serve-static";
 import * as path from 'path'
-import {FileModule} from "../file/file.module";
+import {FileModule} from "./file/file.module";
 import {ProfileController} from "./profile.controller";
 import {JwtModule} from "@nestjs/jwt";
 @Module({

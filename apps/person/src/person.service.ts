@@ -7,11 +7,9 @@ import {PersonOccupation} from "@app/shared/models/person_occupation.model";
 import {Country} from "@app/shared/models/country.model";
 import {Genre} from "@app/shared/models/genre.model";
 import {Occupation} from "@app/shared/models/occupation.model";
-import {CreatePersonDto} from "./dto/createPerson.dto";
-import {PersonDto} from "./dto/person.dto";
+import {CreatePersonDto} from "@app/shared/dtos/person-dto/createPerson.dto";
 import {PersonBestFilm} from "@app/shared/models/person_best_film.model";
-import {UpdateFilmDto} from "../../film/src/dto/updateFilm.dto";
-import {UpdatePersonDto} from "./dto/updatePerson.dto";
+import {UpdatePersonDto} from "@app/shared/dtos/person-dto/updatePerson.dto";
 
 @Injectable()
 export class PersonService {

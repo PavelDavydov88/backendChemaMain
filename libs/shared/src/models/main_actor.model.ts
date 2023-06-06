@@ -20,6 +20,7 @@ export class MainActor extends Model<MainActor, MainActorCreationAttrs> {
     })
     id: number;
 
+    @ApiProperty({ example: '1', description: 'внешний ключ,ссылается на  FILM' })
     @ForeignKey(() => Film)
     @Column({type: DataType.INTEGER, unique: 'uniqueTag', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     film_id: number;
@@ -27,6 +28,7 @@ export class MainActor extends Model<MainActor, MainActorCreationAttrs> {
     @BelongsTo(() => Film)
     film: Film;
 
+    @ApiProperty({ example: '1', description: 'внешний ключ, ссылается на PERSON' })
     @ForeignKey(() => Person)
     @Column({type: DataType.INTEGER, unique: 'uniqueTag', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     person_id: number;

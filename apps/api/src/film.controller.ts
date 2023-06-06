@@ -12,8 +12,8 @@ import {
   UseInterceptors
 } from "@nestjs/common";
 import { ClientProxy } from "@nestjs/microservices";
-import { FilterFilmDto } from "../../film/src/dto/filterFilm.dto";
-import { CreatFilmDto } from "../../film/src/dto/creatFilm.dto";
+import { FilterFilmDto } from "@app/shared/dtos/film-dto/filterFilm.dto";
+import { CreatFilmDto } from "@app/shared/dtos/film-dto/creatFilm.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { AppService } from "./app.service";
 import { lastValueFrom } from "rxjs";

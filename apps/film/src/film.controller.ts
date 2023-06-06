@@ -1,12 +1,12 @@
 import { Controller } from "@nestjs/common";
 import { FilmService } from "./film.service";
 import { Ctx, MessagePattern, Payload, RmqContext } from "@nestjs/microservices";
-import { FilterFilmDto } from "./dto/filterFilm.dto";
-import { CreatFilmDto } from "./dto/creatFilm.dto";
-import { UpdateFilmDto } from "./dto/updateFilm.dto";
+import { FilterFilmDto } from "@app/shared/dtos/film-dto/filterFilm.dto";
+import { CreatFilmDto } from "@app/shared/dtos/film-dto/creatFilm.dto";
+import { UpdateFilmDto } from "@app/shared/dtos/film-dto/updateFilm.dto";
 import { SharedService } from "@app/shared/services/shared/shared.service";
-import { UpdateOccupationDto } from "../../occupation/src/dto/updateOccupation.dto";
-import { DeleteFilmDto } from "./dto/deleteFilm.dto";
+import { UpdateOccupationDto } from "@app/shared/dtos/occupation-dto/updateOccupation.dto";
+import { DeleteFilmDto } from "@app/shared/dtos/film-dto/deleteFilm.dto";
 
 @Controller()
 export class FilmController {

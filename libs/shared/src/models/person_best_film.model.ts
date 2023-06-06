@@ -20,6 +20,7 @@ export class PersonBestFilm extends Model<PersonBestFilm, PersonBestFilmCreation
     })
     id: number;
 
+    @ApiProperty({ example: '1', description: 'внешний ключ, ссылается на PERSON' })
     @ForeignKey(() => Person)
     @Column({type: DataType.INTEGER, unique: 'uniqueTag', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     person_id: number;
@@ -27,6 +28,7 @@ export class PersonBestFilm extends Model<PersonBestFilm, PersonBestFilmCreation
     @BelongsTo(() => Person)
     person: Person;
 
+    @ApiProperty({ example: '1', description: 'внешний ключ, ссылается на FILM' })
     @ForeignKey(() => Film)
     @Column({type: DataType.INTEGER, unique: 'uniqueTag', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     film_id: number;

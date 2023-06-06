@@ -1,7 +1,7 @@
 import { Film } from "@app/shared/models/film.model";
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
-import { FilterFilmDto } from "./dto/filterFilm.dto";
+import { FilterFilmDto } from "@app/shared/dtos/film-dto/filterFilm.dto";
 import { FilmCountry } from "@app/shared/models/film_country.model";
 import { Country } from "@app/shared/models/country.model";
 import { Genre } from "@app/shared/models/genre.model";
@@ -11,9 +11,9 @@ import { Occupation } from "@app/shared/models/occupation.model";
 import { Person } from "@app/shared/models/person.model";
 import { MainActor } from "@app/shared/models/main_actor.model";
 import { SimilarFilm } from "@app/shared/models/similar_film.model";
-import { CreatFilmDto } from "./dto/creatFilm.dto";
-import { UpdateFilmDto } from "./dto/updateFilm.dto";
-import { DeleteFilmDto } from "./dto/deleteFilm.dto";
+import { CreatFilmDto } from "@app/shared/dtos/film-dto/creatFilm.dto";
+import { UpdateFilmDto } from "@app/shared/dtos/film-dto/updateFilm.dto";
+import { DeleteFilmDto } from "@app/shared/dtos/film-dto/deleteFilm.dto";
 import sequelize, { Op } from "sequelize";
 
 @Injectable()

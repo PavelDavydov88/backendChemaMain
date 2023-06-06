@@ -20,6 +20,7 @@ export class FilmGenre extends Model<FilmGenre, FilmGenreCreationAttrs> {
     })
     id: number;
 
+    @ApiProperty({ example: '1', description: 'внешний ключ, ссылкается на FILM' })
     @ForeignKey(() => Film)
     @Column({type: DataType.INTEGER, unique: 'uniqueTag', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     film_id: number;
@@ -27,6 +28,7 @@ export class FilmGenre extends Model<FilmGenre, FilmGenreCreationAttrs> {
     @BelongsTo(() => Film)
     film: Film;
 
+    @ApiProperty({ example: '1', description: 'внешний ключ, ссылкается на GENRE' })
     @ForeignKey(() => Genre)
     @Column({type: DataType.INTEGER, unique: 'uniqueTag', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     genre_id: number;

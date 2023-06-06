@@ -16,6 +16,7 @@ export class Occupation extends Model<Occupation, OccupationCreationAttrs> {
     })
     id: number;
 
+    @ApiProperty({ example: 'Actor', description: 'название професси' })
     @Column({type: DataType.STRING, unique: true})
     name: string;
 

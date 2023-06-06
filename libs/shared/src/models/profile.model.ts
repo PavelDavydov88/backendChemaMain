@@ -20,19 +20,23 @@ interface ProfileCreationAttrs {
 @Table({tableName: 'profile'})
 export class Profile extends Model<Profile, ProfileCreationAttrs >{
 
+    @ApiProperty({ example: '1', description: 'Уникальный индефикатор' })
     @Column({type: DataType.INTEGER, unique: true, autoIncrement:true, primaryKey: true})
     id: number;
 
 
+    @ApiProperty({ example: 'user123gmail.com', description: 'mail' })
     @Column({type: DataType.STRING, unique: true,  allowNull: false}) //unique: true,
         //в видео было но у меня вылетает валид ошибка при изменение 1-2 сымволов при post, убрал
     email: string;
 
 
+    @ApiProperty({ example: 'oleg', description: 'имя пользователя' })
     @Column({type: DataType.STRING,  allowNull: false})  //unique: true,
     firstName: string;
 
 
+    @ApiProperty({ example: 'olegovich', description: 'фамилия' })
     @Column({type: DataType.STRING, allowNull: false })
     lastName: string;
 

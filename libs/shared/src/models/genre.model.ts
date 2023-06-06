@@ -16,11 +16,9 @@ export class Genre extends Model<Genre, GenreCreationAttrs> {
         primaryKey: true,
     })
     id: number;
-
+    @ApiProperty({ example: 'triller', description: 'Имя жанра' })
     @Column({type: DataType.STRING, unique: true})
     name: string;
 
-    @Column({type: DataType.STRING, unique: true})
-    nameEng: string;
 
 }

@@ -36,6 +36,7 @@ export class User extends Model<User, UserCreationAttrs > {
     @BelongsToMany(() => Role, () => UserRoles)//многие ко многим
     roles: Role[];
 
+    @ApiProperty({ example: '1', description: 'внешний ключ, ссылкает на PROFILE' })
     @ForeignKey(() => Profile)
     @Column({type: DataType.INTEGER}) //unique: true,
     userId: number

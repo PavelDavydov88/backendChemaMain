@@ -1,10 +1,10 @@
 import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
 import {Country} from "@app/shared/models/country.model";
-import {CreateCountryDto} from "./dto/createCountry.dto";
+import {CreateCountryDto} from "@app/shared/dtos/country-dto/createCountry.dto";
 import {where} from "sequelize";
-import {UpdateCountryDto} from "./dto/updateCountry.dto";
-import {CreateGenreDto} from "../../genre/src/dto/createGenre.dto";
+import {UpdateCountryDto} from "@app/shared/dtos/country-dto/updateCountry.dto";
+import {CreateGenreDto} from "@app/shared/dtos/genre-dto/createGenre.dto";
 
 @Injectable()
 export class CountryService {

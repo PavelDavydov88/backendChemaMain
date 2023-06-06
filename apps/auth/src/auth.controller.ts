@@ -2,8 +2,8 @@ import { Controller, Get } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import {Ctx, MessagePattern, Payload, RmqContext} from "@nestjs/microservices";
 import {SharedService} from "@app/shared/services/shared/shared.service";
-import {CreateProfileDto} from "./dto/create-profile.dto";
-import {CreateRoleDto} from "./dto/user-role.dto";
+import {CreateProfileDto} from "@app/shared/dtos/auth-dto/create-profile.dto";
+import {CreateRoleDto} from "@app/shared/dtos/auth-dto/user-role.dto";
 import {RolesService} from "./role/role.service";
 
 
