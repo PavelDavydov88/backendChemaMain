@@ -2,13 +2,13 @@ import {
   Body,
   Controller,
   Delete,
-  Get,
+  Get, HttpException, HttpStatus,
   Inject,
   Param,
   Post,
   Put,
   Query,
-  UploadedFile,
+  UploadedFile, UseGuards,
   UseInterceptors
 } from "@nestjs/common";
 import { ClientProxy, RpcException } from "@nestjs/microservices";
@@ -17,6 +17,8 @@ import { CreatFilmDto } from "../../film/src/dto/creatFilm.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
 import { AppService } from "./app.service";
 import { catchError, lastValueFrom, throwError } from "rxjs";
+import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
+import { Roles } from "@app/shared/decorators/role-auth.decorator";
 
 @Controller("film")
 export class FilmController {
@@ -41,6 +43,7 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
+
   @Get()
   async getFilms(@Query() filterFilmDto: FilterFilmDto) {
     return await this.filmService.send(
@@ -61,6 +64,8 @@ export class FilmController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN', 'USER')
   @Post()
   @UseInterceptors(FileInterceptor("image"))
   async creatFilm(@Body() creatFilmDto: CreatFilmDto, @UploadedFile() file) {
@@ -81,6 +86,9 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
+
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Put()
   async updateFilm(@Body() payload: any) {
     return this.filmService.send(
@@ -89,6 +97,8 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Delete()
   async deleteFilm(@Body() payload: any) {
     const response = await this.filmService.send(
@@ -104,7 +114,7 @@ export class FilmController {
       return nameFile;
     }
     catch (e) {
-      return "Ошибка при удалении файла"
+      throw new HttpException("Ошибка при удалении файла", HttpStatus.BAD_REQUEST);
     }
   }
 

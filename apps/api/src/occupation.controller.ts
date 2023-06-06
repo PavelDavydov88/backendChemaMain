@@ -1,6 +1,8 @@
-import { Body, Controller, Delete, Get, Inject, Post, Put } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Inject, Post, Put, UseGuards } from "@nestjs/common";
 import { ClientProxy, RpcException } from "@nestjs/microservices";
 import { catchError, throwError } from "rxjs";
+import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
+import { Roles } from "@app/shared/decorators/role-auth.decorator";
 
 @Controller("occupation")
 export class OccupationController {
@@ -14,6 +16,8 @@ export class OccupationController {
     );
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN', 'USER')
   @Post()
   async createOccupation(@Body() payload: any) {
     return this.occupationService.send(
@@ -22,6 +26,8 @@ export class OccupationController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Put()
   async updateOccupation(@Body() payload: any) {
     return this.occupationService.send(
@@ -30,6 +36,9 @@ export class OccupationController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
+
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Delete()
   async deleteOccupation(@Body() payload: any) {
     return this.occupationService.send(

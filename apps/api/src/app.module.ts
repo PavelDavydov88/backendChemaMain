@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { AppController } from "./app.controller";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { SharedModule } from "@app/shared/modules/shared/shared.module";
 import { GenreController } from "./genre.controller";
 import { CountryController } from "./country.controller";
@@ -15,6 +15,10 @@ import { CommentController } from "./comment.controller";
 import { PostgresdbModule } from "@app/shared/modules/postgresdb/postgresdb.module";
 import { SequelizeModule } from "@nestjs/sequelize";
 import { CommentFilm } from "@app/shared/models/comment.model";
+import { FileModule } from "./file/file.module";
+import { JwtModule } from "@nestjs/jwt";
+import { PersonController } from "./person.controller";
+import { ProfileController } from "./profile.controller";
 
 @Module({
   imports: [ConfigModule.forRoot({
@@ -32,13 +36,13 @@ import { CommentFilm } from "@app/shared/models/comment.model";
     SharedModule.registerRmq("COUNTRY_SERVICE", process.env.RABBITMQ_COUNTRY_QUEUE),
     SharedModule.registerRmq("OCCUPATION_SERVICE", process.env.RABBITMQ_OCCUPATION_QUEUE),
     SharedModule.registerRmq("FILES_SERVICE", process.env.RABBITMQ_FILES_QUEUE),
+    SharedModule.registerRmq('FILE_SERVICE', process.env.RABBITMQ_FILE_QUEUE),
+    SharedModule.registerRmq('PROFILE_SERVICE', process.env.RABBITMQ_PROFILE_QUEUE),
     PostgresdbModule,
     SequelizeModule.forFeature([
       CommentFilm
     ]),
     CommentModule,
-    SharedModule.registerRmq('FILE_SERVICE', process.env.RABBITMQ_FILE_QUEUE),
-    SharedModule.registerRmq('PROFILE_SERVICE', process.env.RABBITMQ_PROFILE_QUEUE),
     JwtModule.registerAsync({
       useFactory: (configService: ConfigService) => ({
         secret: configService.get('PRIVATE_KEY'),

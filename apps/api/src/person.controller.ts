@@ -18,7 +18,7 @@ import {Person} from "@app/shared/models/person.model";
 import {PersonOccupation} from "@app/shared/models/person_occupation.model";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {CreatePersonDto} from "../../person/src/dto/createPerson.dto";
-import {FileService} from "../file/file.service";
+import {FileService} from "./file/file.service";
 import {map} from "rxjs";
 import any = jasmine.any;
 // import {JwtAuthGuard} from "../../auth/src/jwt-auth.guard";
