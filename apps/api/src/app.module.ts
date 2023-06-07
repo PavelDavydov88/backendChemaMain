@@ -1,13 +1,10 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { SharedModule } from "@app/shared/modules/shared/shared.module";
 import { GenreController } from "./genre.controller";
 import { CountryController } from "./country.controller";
 import { FilmController } from "./film.controller";
 import { OccupationController } from "./occupation.controller";
-import { FilesController } from "./files.controller";
-import { AppService } from "./app.service";
 import { ServeStaticModule } from "@nestjs/serve-static";
 import { CommentModule } from "./comment/comment.module";
 import * as path from "path";
@@ -35,8 +32,6 @@ import { ProfileController } from "./profile.controller";
     SharedModule.registerRmq("GENRE_SERVICE", process.env.RABBITMQ_GENRE_QUEUE),
     SharedModule.registerRmq("COUNTRY_SERVICE", process.env.RABBITMQ_COUNTRY_QUEUE),
     SharedModule.registerRmq("OCCUPATION_SERVICE", process.env.RABBITMQ_OCCUPATION_QUEUE),
-    SharedModule.registerRmq("FILES_SERVICE", process.env.RABBITMQ_FILES_QUEUE),
-    SharedModule.registerRmq('FILE_SERVICE', process.env.RABBITMQ_FILE_QUEUE),
     SharedModule.registerRmq('PROFILE_SERVICE', process.env.RABBITMQ_PROFILE_QUEUE),
     PostgresdbModule,
     SequelizeModule.forFeature([
@@ -54,18 +49,14 @@ import { ProfileController } from "./profile.controller";
   ],
 
   controllers: [
-    AppController,
     GenreController,
     CountryController,
     FilmController,
     OccupationController,
-    FilesController,
     CommentController,
     PersonController,
     ProfileController,
   ],
-
-  providers: [AppService]
 
 })
 export class AppModule {

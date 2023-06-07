@@ -15,9 +15,6 @@ import { CreatFilmDto } from "@app/shared/dtos/film-dto/creatFilm.dto";
 import { UpdateFilmDto } from "@app/shared/dtos/film-dto/updateFilm.dto";
 import { DeleteFilmDto } from "@app/shared/dtos/film-dto/deleteFilm.dto";
 import sequelize, { Op } from "sequelize";
-import { CreatFilmDto } from "./dto/creatFilm.dto";
-import { UpdateFilmDto } from "./dto/updateFilm.dto";
-import { DeleteFilmDto } from "./dto/deleteFilm.dto";
 import { RpcException } from "@nestjs/microservices";
 
 @Injectable()
@@ -356,7 +353,6 @@ export class FilmService {
     const film = await this.filmRepository.findOne({ raw: true, where: { "name": dto.oldName } });
     if (!film) throw new RpcException(
       new NotFoundException(`Такой фильм не найден!`));
-      // return { statusCode: 404, error: "Not Found", message: `Film with name= ${dto.oldName} not found` };
     return await this.filmRepository.update({ name: dto.newName }, { where: { id: film.id } });
   }
 

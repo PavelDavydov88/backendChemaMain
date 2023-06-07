@@ -45,10 +45,12 @@ export class OccupationController {
   }
 
 
-  @UseGuards(JwtAuthGuard)
-  @Roles('ADMIN')
+  // @UseGuards(JwtAuthGuard)
+  // @Roles('ADMIN')
   @ApiOperation({ summary: ' удалить профессию ' })
   @ApiResponse({ status: 200, type: Occupation })
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
   @Delete()
   async deleteOccupation(@Body() payload: any) {
     return this.occupationService.send(

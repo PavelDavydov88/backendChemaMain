@@ -4,6 +4,7 @@ import {Ctx, MessagePattern, Payload, RmqContext} from "@nestjs/microservices";
 import {SharedService} from "@app/shared/services/shared/shared.service";
 import {CreateCountryDto} from "@app/shared/dtos/country-dto/createCountry.dto";
 import {UpdateCountryDto} from "@app/shared/dtos/country-dto/updateCountry.dto";
+import { DeleteCountryDto } from "@app/shared/dtos/country-dto/deleteCountry.dto";
 
 @Controller()
 export class CountryController {
@@ -14,7 +15,7 @@ export class CountryController {
   @MessagePattern('getAllCountry')
   async getAllCountry(@Ctx() context: RmqContext){
     await this.sharedService.acknowledgeMessage(context)
-    return await this.countryService.getAllCounbtry()
+    return await this.countryService.getAllCountry()
   }
   @MessagePattern('createCountry')
   async createCountry(@Ctx() context: RmqContext, @Payload() dto: CreateCountryDto){
@@ -28,7 +29,7 @@ export class CountryController {
   }
 
   @MessagePattern('deleteCountry')
-  async deleteCountry(@Ctx() context: RmqContext, @Payload() dto: CreateCountryDto){
+  async deleteCountry(@Ctx() context: RmqContext, @Payload() dto: DeleteCountryDto){
     await this.sharedService.acknowledgeMessage(context)
     return await this.countryService.deleteCountry(dto)
   }

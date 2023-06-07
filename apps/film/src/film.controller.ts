@@ -4,7 +4,6 @@ import { MessagePattern } from "@nestjs/microservices";
 import { FilterFilmDto } from "@app/shared/dtos/film-dto/filterFilm.dto";
 import { CreatFilmDto } from "@app/shared/dtos/film-dto/creatFilm.dto";
 import { UpdateFilmDto } from "@app/shared/dtos/film-dto/updateFilm.dto";
-import { DeleteFilmDto } from "./dto/deleteFilm.dto";
 import { DeleteFilmDto } from "@app/shared/dtos/film-dto/deleteFilm.dto";
 
 @Controller()

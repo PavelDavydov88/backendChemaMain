@@ -2,29 +2,34 @@ import {
   Body,
   Controller,
   Delete,
-  Get, HttpException, HttpStatus,
+  Get,
+  HttpException,
+  HttpStatus,
   Inject,
   Param,
   Post,
   Put,
   Query,
-  UploadedFile, UseGuards,
+  UploadedFile,
+  UseGuards,
   UseInterceptors
 } from "@nestjs/common";
 import { ClientProxy, RpcException } from "@nestjs/microservices";
-import { FilterFilmDto } from "../../film/src/dto/filterFilm.dto";
-import { CreatFilmDto } from "../../film/src/dto/creatFilm.dto";
 import { FileInterceptor } from "@nestjs/platform-express";
-import { AppService } from "./app.service";
 import { catchError, lastValueFrom, throwError } from "rxjs";
 import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
 import { Roles } from "@app/shared/decorators/role-auth.decorator";
+import { FileService } from "./file/file.service";
+import { FilterFilmDto } from "@app/shared/dtos/film-dto/filterFilm.dto";
+import { CreatFilmDto } from "@app/shared/dtos/film-dto/creatFilm.dto";
 
 @Controller("film")
 export class FilmController {
   constructor(
     @Inject("FILM_SERVICE") private readonly filmService: ClientProxy,
-    private appService: AppService
+    private fileService: FileService,
+
+
   ) {
   }
 
@@ -46,7 +51,7 @@ export class FilmController {
 
   @Get()
   async getFilms(@Query() filterFilmDto: FilterFilmDto) {
-    return await this.filmService.send(
+    return this.filmService.send(
       {
         cmd: "get-films"
       },
@@ -56,7 +61,7 @@ export class FilmController {
 
   @Get("/search/writers")
   async searchWriters(@Query('query') query: string) {
-    return await this.filmService.send(
+    return this.filmService.send(
       {
         cmd: "search-writers"
       },
@@ -65,18 +70,13 @@ export class FilmController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Roles('ADMIN', 'USER')
+  @Roles('ADMIN')
   @Post()
   @UseInterceptors(FileInterceptor("image"))
   async creatFilm(@Body() creatFilmDto: CreatFilmDto, @UploadedFile() file) {
 
-    const fileName = await this.appService.creatFile(file);
-    if (!fileName) return {
-      "success": false,
-      "data": {
-        "message": "Ошибка при обработке файла, фильм не был создан"
-      }
-    };
+    const fileName = await this.fileService.creatFile(file);
+    if (!fileName) throw new HttpException("Ошибка при обработке файла, фильм не был создан", HttpStatus.BAD_REQUEST)
     creatFilmDto.picture_film = fileName;
     return this.filmService.send(
       {
@@ -109,7 +109,7 @@ export class FilmController {
     console.log("name = " + JSON.stringify(nameFile));
     try {
       if (typeof nameFile == "string") {
-        return await this.appService.deleteFile(nameFile);
+        return await this.fileService.deleteFile(nameFile);
       }
       return nameFile;
     }
