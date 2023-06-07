@@ -19,6 +19,7 @@ export class FilmCountry extends Model<FilmCountry, FilmCountryCreationAttrs> {
     })
     id: number;
 
+    @ApiProperty({ example: '1', description: 'внешний ключ, ссылкается на FILM' })
     @ForeignKey(() => Film)
     @Column({type: DataType.INTEGER, unique: 'uniqueTag', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     film_id: number;
@@ -26,6 +27,7 @@ export class FilmCountry extends Model<FilmCountry, FilmCountryCreationAttrs> {
     @BelongsTo(() => Film)
     film: Film;
 
+    @ApiProperty({ example: '1', description: 'внешний ключ, ссылкается на COUNTRY' })
     @ForeignKey(() => Country)
     @Column({type: DataType.INTEGER, unique: 'uniqueTag', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     country_id: number;

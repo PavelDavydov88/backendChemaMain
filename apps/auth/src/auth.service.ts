@@ -18,7 +18,7 @@ import {InjectModel} from "@nestjs/sequelize";
 import {User} from "@app/shared/models/user.model";
 import {UserService} from "./user/user.service";
 import {ProfileService} from "./profile/profile.service";
-import {CreateProfileDto} from "./dto/create-profile.dto";
+import {CreateProfileDto} from "@app/shared/dtos/auth-dto/create-profile.dto";
 
 
 

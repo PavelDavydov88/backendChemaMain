@@ -3,12 +3,16 @@ import { ClientProxy, RpcException } from "@nestjs/microservices";
 import { catchError, throwError } from "rxjs";
 import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
 import { Roles } from "@app/shared/decorators/role-auth.decorator";
+import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { Occupation } from "@app/shared/models/occupation.model";
 
 @Controller("occupation")
 export class OccupationController {
   constructor(@Inject("OCCUPATION_SERVICE") private readonly occupationService: ClientProxy) {
   }
 
+  @ApiOperation({ summary: ' Получить список всех профессий ' })
+  @ApiResponse({ status: 200, type: Occupation })
   @Get()
   async getAllOccupation() {
     return this.occupationService.send(
@@ -16,6 +20,8 @@ export class OccupationController {
     );
   }
 
+  @ApiOperation({ summary: ' Создать новую профессию ' })
+  @ApiResponse({ status: 201, type: Occupation })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN', 'USER')
   @Post()
@@ -26,6 +32,8 @@ export class OccupationController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
+  @ApiOperation({ summary: ' Обновить существующую профессию ' })
+  @ApiResponse({ status: 204, type: Occupation })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN')
   @Put()
@@ -39,6 +47,8 @@ export class OccupationController {
 
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN')
+  @ApiOperation({ summary: ' удалить профессию ' })
+  @ApiResponse({ status: 200, type: Occupation })
   @Delete()
   async deleteOccupation(@Body() payload: any) {
     return this.occupationService.send(

@@ -1,10 +1,12 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { Occupation } from "@app/shared/models/occupation.model";
 import { CreateOccupationDto } from "./dto/createOccupation.dto";
 import { UpdateOccupationDto } from "./dto/updateOccupation.dto";
 import { RpcException } from "@nestjs/microservices";
 import { DeleteOccupationDto } from "./dto/deleteOccupation.dto";
+import { CreateOccupationDto } from "@app/shared/dtos/occupation-dto/createOccupation.dto";
+import { UpdateOccupationDto } from "@app/shared/dtos/occupation-dto/updateOccupation.dto";
 
 @Injectable()
 export class OccupationService {

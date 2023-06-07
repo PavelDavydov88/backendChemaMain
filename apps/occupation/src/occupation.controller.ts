@@ -5,6 +5,8 @@ import { SharedService } from "@app/shared/services/shared/shared.service";
 import { CreateOccupationDto } from "./dto/createOccupation.dto";
 import { UpdateOccupationDto } from "./dto/updateOccupation.dto";
 import { DeleteOccupationDto } from "./dto/deleteOccupation.dto";
+import { CreateOccupationDto } from "@app/shared/dtos/occupation-dto/createOccupation.dto";
+import { UpdateOccupationDto } from "@app/shared/dtos/occupation-dto/updateOccupation.dto";
 
 @Controller()
 export class OccupationController {

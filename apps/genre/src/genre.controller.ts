@@ -2,8 +2,8 @@ import {Body, Controller, Get} from '@nestjs/common';
 import { GenreService } from './genre.service';
 import {Ctx, MessagePattern, Payload, RmqContext} from "@nestjs/microservices";
 import {SharedService} from "@app/shared/services/shared/shared.service";
-import {CreateGenreDto} from "./dto/createGenre.dto";
-import {UpdateGenreDto} from "./dto/updateGenre.dto";
+import {CreateGenreDto} from "@app/shared/dtos/genre-dto/createGenre.dto";
+import {UpdateGenreDto} from "@app/shared/dtos/genre-dto/updateGenre.dto";
 
 @Controller()
 export class GenreController {

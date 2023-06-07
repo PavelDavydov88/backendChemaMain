@@ -25,6 +25,7 @@ export class FilmOccupation extends Model<FilmOccupation, FilmOccupationCreation
 
 
 
+    @ApiProperty({ example: '1', description: 'внешний ключ, ссылкается на FILM' })
     @ForeignKey(() => Film)
     @Column({type: DataType.INTEGER, unique: 'uniqueTag', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     film_id: number;
@@ -32,6 +33,7 @@ export class FilmOccupation extends Model<FilmOccupation, FilmOccupationCreation
     @BelongsTo(() => Film)
     film: Film;
 
+    @ApiProperty({ example: '1', description: 'внешний ключ, ссылкается на PERSON' })
     @ForeignKey(() => Person)
     @Column({type: DataType.INTEGER, unique: 'uniqueTag', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     person_id: number;
@@ -39,6 +41,7 @@ export class FilmOccupation extends Model<FilmOccupation, FilmOccupationCreation
     @BelongsTo(() => Person)
     person: Person;
 
+    @ApiProperty({ example: '1', description: 'внешний ключ, ссылкается на OCCUPATION' })
     @ForeignKey(() => Occupation)
     @Column({type: DataType.INTEGER, unique: 'uniqueTag', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     occupation_id: number;

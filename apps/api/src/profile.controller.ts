@@ -1,7 +1,7 @@
 import {Body, Controller, Delete, Get, Inject, Post} from "@nestjs/common";
 import {ClientProxy} from "@nestjs/microservices";
-import {CreateProfileDto} from "../../auth/src/dto/create-profile.dto";
-import {CreateRoleDto} from "../../auth/src/dto/user-role.dto";
+import {CreateProfileDto} from "@app/shared/dtos/auth-dto/create-profile.dto";
+import {CreateRoleDto} from "@app/shared/dtos/auth-dto/user-role.dto";
 
 
 @Controller('profile')
@@ -27,13 +27,5 @@ export class ProfileController{
         return await this.authService.send('createRole', paylaod)
     }
 
-    // @Get()
-    // async getprofiles(){
-    //     return await this.profileSerivce.send('getProfiles', {})
-    // }
-    //
-    // @Delete('/role')
-    // async deleteRole(@Body() payload: CreateRoleDto){
-    //     return await this.profileSerivce.send('deleteRole', payload )
-    // }
+
 }

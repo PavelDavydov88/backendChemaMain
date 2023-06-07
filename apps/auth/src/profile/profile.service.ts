@@ -3,7 +3,7 @@ import {InjectModel} from "@nestjs/sequelize";
 import {Profile} from "@app/shared/models/profile.model";
 import {UserService} from "../user/user.service";
 import {RolesService} from "../role/role.service";
-import {CreateProfileDto} from "../dto/create-profile.dto";
+import {CreateProfileDto} from "@app/shared/dtos/auth-dto/create-profile.dto";
 
 
 @Injectable()
@@ -15,7 +15,7 @@ export class ProfileService {
     async createProfile(dtoProfile: CreateProfileDto){
         const profile = await this.profileRepository.create(dtoProfile)
         const user = await this.userService.createUser({...dtoProfile, email: dtoProfile.email, password: dtoProfile.password})
-        const role = await this.RoleService.getRolByValue("ADMIN")
+        const role = await this.RoleService.getRolByValue("USER")
         await user.$set('roles', [role.id])
         await user.$set('profile', [profile.id])
 

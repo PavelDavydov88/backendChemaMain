@@ -6,7 +6,7 @@ import {ClientProxy} from "@nestjs/microservices";
 export class AppController {
   constructor(
               @Inject('AUTH_SERVICE') private readonly authService : ClientProxy,
-              @Inject('FILM_SERVICE') private readonly filmService : ClientProxy,
+              @Inject('PERSON_SERVICE') private readonly personService: ClientProxy,
               ) {}
 
   @Get()
@@ -18,5 +18,8 @@ export class AppController {
         {}
     );
   }
+
+
+
 
 }

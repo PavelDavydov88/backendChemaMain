@@ -1,7 +1,7 @@
 import { Controller, Get, HttpStatus, Inject, Query, Res, StreamableFile } from "@nestjs/common";
 import {Response} from 'express'
 import { ClientProxy } from "@nestjs/microservices";
-import { FileDto } from "../../files/src/dto/File.dto";
+import { FileDto } from "@app/shared/dtos/file-dto/File.dto";
 import { of } from "rxjs";
 import { join } from 'path';
 import { createReadStream } from 'fs';

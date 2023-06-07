@@ -2,7 +2,7 @@ import {
     Body,
     Controller,
     Delete,
-    Get,
+    Get, HttpException, HttpStatus,
     Inject,
     Param,
     Post,
@@ -17,13 +17,17 @@ import {Genre} from "@app/shared/models/genre.model";
 import {Person} from "@app/shared/models/person.model";
 import {PersonOccupation} from "@app/shared/models/person_occupation.model";
 import {FileInterceptor} from "@nestjs/platform-express";
-import {CreatePersonDto} from "../../person/src/dto/createPerson.dto";
+import {CreatePersonDto} from "@app/shared/dtos/person-dto/createPerson.dto";
 import {FileService} from "./file/file.service";
 import {map} from "rxjs";
 import any = jasmine.any;
 // import {JwtAuthGuard} from "../../auth/src/jwt-auth.guard";
 import {Roles} from "@app/shared/decorators/role-auth.decorator";
 import {JwtAuthGuard} from "../../auth/src/jwt-auth.guard";
+import {RoleGuard} from "./guard/role.guard";
+import {PersonBestFilm} from "@app/shared/models/person_best_film.model";
+import {PersonGenre} from "@app/shared/models/person_genre.model";
+import {PersonCountry} from "@app/shared/models/person_counrty.model";
 
 @Controller('person')
 export class PersonController{
@@ -43,6 +47,7 @@ export class PersonController{
     @ApiOperation({ summary: ' Получить всех работников кино ' })
     @ApiResponse({ status: 200, type: Person })
     @UseGuards(JwtAuthGuard)
+    @UseGuards(RoleGuard)
     @Roles('ADMIN')
     @Get()
     async getPersons() {
@@ -57,22 +62,23 @@ export class PersonController{
     }
     @ApiOperation({ summary: ' Получить одного работника кино, включая смежные с ним бд ' })
     @ApiResponse({ status: 200, type: Person })
-    @ApiResponse({ status: 200, type: PersonOccupation })
+    @UseGuards(JwtAuthGuard)
+    @Roles('USER')
     @Get("/:id")
     async getOnePerson(@Param("id") payload: number){
         return await this.personService.send('getOnePerson', payload)
     }
 
+    @ApiOperation({ summary: ' Создать нового работника сферы кино ' })
+    @ApiResponse({ status: 201, type: Person })
     @Post('')
     @UseInterceptors(FileInterceptor('image'))
-    async createFile(@Body() payload: CreatePersonDto,@UploadedFile() image: any){
+    async createPerson(@Body() payload: CreatePersonDto,@UploadedFile() image: any){
         const fileName = await this.fileService.createFile(image);
-        if (!fileName) return {
-            "success": false,
-            "data": {
-                "message": "Ошибка при обработке файла, фильм не был создан"
-            }
+        if (!fileName) {
+            throw new HttpException('ошибка при записи файла', HttpStatus.INTERNAL_SERVER_ERROR)
         }
+
         payload.picture_person = fileName;
 
         const createPerson = await this.personService.send(
@@ -84,11 +90,15 @@ export class PersonController{
 
     }
 
+    @ApiOperation({ summary: ' обновить существующего работника кино ' })
+    @ApiResponse({ status: 204, type: Person })
     @Put("/:id")
     async updatePerson(@Param("id") payload: any){
         return await this.personService.send('updatePerson', payload)
     }
 
+    @ApiOperation({ summary: ' Удалить работника кино ' })
+    @ApiResponse({ status: 200, type: Person })
     @Delete()
     async deletePerson(@Body() payload: CreatePersonDto){
         return await this.personService.send('deletePerson', payload)

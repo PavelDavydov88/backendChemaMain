@@ -2,8 +2,8 @@ import { Controller, Get } from '@nestjs/common';
 import { CountryService } from './country.service';
 import {Ctx, MessagePattern, Payload, RmqContext} from "@nestjs/microservices";
 import {SharedService} from "@app/shared/services/shared/shared.service";
-import {CreateCountryDto} from "./dto/createCountry.dto";
-import {UpdateCountryDto} from "./dto/updateCountry.dto";
+import {CreateCountryDto} from "@app/shared/dtos/country-dto/createCountry.dto";
+import {UpdateCountryDto} from "@app/shared/dtos/country-dto/updateCountry.dto";
 
 @Controller()
 export class CountryController {
