@@ -11,20 +11,20 @@ export class OccupationController {
   ) {}
 
   @MessagePattern('getAllOccupation')
-  async getAllCountry(){
+  async getAllOccupation(){
     return await this.occupationService.getAllOccupation()
   }
   @MessagePattern('createOccupation')
-  async createCountry( dto: CreateOccupationDto){
+  async createOccupation( dto: CreateOccupationDto){
     return await this.occupationService.createOccupation(dto)
   }
   @MessagePattern('updateOccupation')
-  async updateCountry( dto: UpdateOccupationDto){
+  async updateOccupation( dto: UpdateOccupationDto){
     return await this.occupationService.updateOccupation(dto)
   }
 
   @MessagePattern('deleteOccupation')
-  async deleteCountry( dto: DeleteOccupationDto){
+  async deleteOccupation( dto: DeleteOccupationDto){
     return await this.occupationService.deleteOccupation(dto)
   }
 }

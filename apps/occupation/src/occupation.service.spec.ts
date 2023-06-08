@@ -17,8 +17,10 @@ describe("OccupationService", () => {
         provide: OCCUPATION_MODEL_TOKEN,
         useValue: {
           findAll: jest.fn(() => [{ "id": 1, "name": "спец во всем" }]),
-          findOne: jest.fn(() => ({ "id": 1, "name": "спец во всем" })).mockReturnValueOnce(undefined),
-          create: jest.fn(x => ({ "id": 1, "name": x.name }))
+          findOne: jest.fn(() => ({ "id": 1, "name": "спец во всем" })),
+          create: jest.fn(x => ({ "id": 1, "name": x.name })),
+          update: jest.fn(x => ({ "id": 1, "name": x.name })),
+          destroy: jest.fn(() => 1)
         }
       }
       ]
@@ -28,28 +30,66 @@ describe("OccupationService", () => {
     occupationRepository = module.get<Repository<Occupation>>(OCCUPATION_MODEL_TOKEN);
   });
 
-  describe("testing service", () => {
+  describe("testing method getAllOccupation", () => {
 
-    it("repository should be defined", () => {
+    it("method should be defined", () => {
       expect(occupationRepository).toBeDefined();
     });
 
-    it("service should return occupations", async () => {
+    it("method should return all occupations", async () => {
       expect(await occupationService.getAllOccupation()).toEqual([{ id: 1, name: "спец во всем" }]);
     });
 
-    it("creat a new occupation", async () => {
+  });
 
+  describe("testing method createOccupation", () => {
+
+    it("creat a new occupation", async () => {
+      occupationRepository.findOne = jest.fn(() => undefined);
       expect(await occupationService.createOccupation({ name: "спец во всем" })).toEqual({
         id: expect.any(Number),
         name: "спец во всем"
       });
     });
 
-    it("don't creat a new occupation, with exist occupation, throw exception", async () => {
-      expect(await occupationService.createOccupation({ name: "спец во всем" }));
+    it("creat a new occupation, with exist occupation, throw exception", async () => {
       await expect(async () => {
         return await occupationService.createOccupation({ name: "спец во всем" });
+      }).rejects.toThrow(RpcException);
+    });
+
+  });
+
+  describe("testing method updateOccupation", () => {
+
+    it("update  a occupation", async () => {
+      expect(await occupationService.updateOccupation({ id: 1, name: "спец не во всем" })).toEqual({
+        id: expect.any(Number),
+        name: "спец не во всем"
+      });
+    });
+
+    it("update a occupation with a non-existent id, throw exception", async () => {
+      occupationRepository.findOne = jest.fn(() => undefined);
+      await expect(async () => {
+        return await occupationService.updateOccupation({ id: 1000, name: "спец во всем" });
+      }).rejects.toThrow(RpcException);
+    });
+
+  });
+
+  describe("testing method deleteOccupation", () => {
+
+    it("delete  a occupation", async () => {
+      expect(await occupationService.deleteOccupation({ name: "спец во всем" })).toEqual(1);
+      expect(await occupationService.deleteOccupation({ name: "спец во всем" })).not.toEqual("спец не во всем");
+      expect(await occupationService.deleteOccupation({ name: "спец во всем" })).not.toEqual(2);
+    });
+
+    it("delete a occupation with a non-existent name, throw exception", async () => {
+      occupationRepository.findOne = jest.fn(() => undefined);
+      await expect(async () => {
+        return await occupationService.deleteOccupation({ name: "спец во всем" });
       }).rejects.toThrow(RpcException);
     });
 
