@@ -1,6 +1,8 @@
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { Occupation } from "@app/shared/models/occupation.model";
+import { RpcException } from "@nestjs/microservices";
+import { DeleteOccupationDto } from "@app/shared/dtos/occupation-dto/deleteOccupation.dto";
 import { CreateOccupationDto } from "@app/shared/dtos/occupation-dto/createOccupation.dto";
 import { UpdateOccupationDto } from "@app/shared/dtos/occupation-dto/updateOccupation.dto";
 
@@ -15,11 +17,12 @@ export class OccupationService {
   }
 
   async createOccupation(dto: CreateOccupationDto) {
-    const getOccupation = await this.occupationRepository.findOne({
+    const checkOccupation = await this.occupationRepository.findOne({
       where: { name: dto.name }
     });
-    if (getOccupation) {
-      throw new HttpException("Такая профессия уже есть", HttpStatus.BAD_REQUEST);
+    if (checkOccupation) {
+      throw new RpcException(
+        new NotFoundException("Такая профессия уже есть!"));
     } else {
       const createOccupation = await this.occupationRepository.create(dto);
       return createOccupation;
@@ -27,17 +30,22 @@ export class OccupationService {
   }
 
   async updateOccupation(dto: UpdateOccupationDto) {
-    const occupation = await this.occupationRepository.update(dto, { where: { id: dto.id } });
-    return occupation;
+    const occupation = await this.occupationRepository.findOne({ where: { id: dto.id } });
+    if (occupation) {
+      return await this.occupationRepository.update(dto, { where: { id: dto.id } });
+    } else {
+      throw new RpcException(
+        new NotFoundException("Такой профессии не существует!"));
+    }
   }
 
-  async deleteOccupation(dto: CreateOccupationDto) {
-    const id = await this.occupationRepository.findOne({ where: { name: dto.name } });
-    if (id) {
-      const occupation = await this.occupationRepository.destroy({ where: { id: id.id } });
-      return occupation;
+  async deleteOccupation(dto: DeleteOccupationDto) {
+    const occupation = await this.occupationRepository.findOne({ where: { name: dto.name } });
+    if (occupation) {
+      return await this.occupationRepository.destroy({ where: { id: occupation.id } });
     } else {
-      throw new HttpException("Такой профессии не существует", HttpStatus.BAD_REQUEST);
+      throw new RpcException(
+        new NotFoundException("Такой профессии не существует!"));
     }
   }
 }

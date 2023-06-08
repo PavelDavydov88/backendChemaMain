@@ -1,4 +1,4 @@
-import {HttpException, HttpStatus, Injectable} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
 import {Person} from "@app/shared/models/person.model";
 import {InjectModel} from "@nestjs/sequelize";
 import {PersonCountry} from "@app/shared/models/person_counrty.model";
@@ -10,6 +10,8 @@ import {Occupation} from "@app/shared/models/occupation.model";
 import {CreatePersonDto} from "@app/shared/dtos/person-dto/createPerson.dto";
 import {PersonBestFilm} from "@app/shared/models/person_best_film.model";
 import {UpdatePersonDto} from "@app/shared/dtos/person-dto/updatePerson.dto";
+import { DeletePersonDto } from "@app/shared/dtos/person-dto/deletePerson.dto";
+import { RpcException } from "@nestjs/microservices";
 
 @Injectable()
 export class PersonService {
@@ -23,10 +25,7 @@ export class PersonService {
               @InjectModel(PersonBestFilm) private bestFilmRepository: typeof PersonBestFilm
   ) {}
   async getAllPerson(){
-
-
-    const persons =await this.personRepository.findAll()
-    return persons
+    return this.personRepository.findAll()
   }
   async getByValue(id : number){
     const person  = await this.personRepository.findOne({ where: { id: id  } } )
@@ -39,12 +38,13 @@ export class PersonService {
       person, personCountry, personGenre, personOccupation
     }
   }
-  async deletePerson(dto: CreatePersonDto){
+  async deletePerson(dto: DeletePersonDto){
     const person = await this.personRepository.findOne({
       where:
           { name: dto.name }
     })
-    if(!person) return new HttpException('Такого работника кино не существует', HttpStatus.BAD_REQUEST)
+    if(!person) throw new RpcException(
+      new NotFoundException(`Такого работника кино не существует!`));
     return await this.personRepository.destroy({ where: {
       name: dto.name
       }})
@@ -53,7 +53,8 @@ export class PersonService {
     const person = await this.personRepository.findOne({ where: {
       id: id
       } })
-    if(!person) return new HttpException('Такого работника кино не сущесвует', HttpStatus.BAD_REQUEST )
+    if(!person)  throw new RpcException(
+      new NotFoundException(`Такого работника кино не сущесвует!`));
     return await this.personRepository.update({ name: dto.newName }, { where: { id : id }})
   }
 
@@ -62,9 +63,9 @@ export class PersonService {
     const getPerson = await this.personRepository.findOne({
       where: { name: dto.name }
     })
-    console.log('dto =' + JSON.stringify(dto))
-    if (getPerson)
-      return new HttpException('это имя уже занято', HttpStatus.BAD_REQUEST)
+    console.log('comment-dto =' + JSON.stringify(dto))
+    if (getPerson) throw new RpcException(
+      new NotFoundException(`это имя уже занято!`));
     const createPerson = await this.personRepository.create(dto)
     const country = await this.countryRerepository.findOne({ where: {
       name: dto.country } } );

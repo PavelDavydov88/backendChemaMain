@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, UseGuards } from "@nestjs/common";
 import { CommentService } from "./comment/comment.service";
-import { CreatCommentFilmDto } from "./comment/dto/creatCommentFilm.dto";
+import { CreatCommentFilmDto } from "../../../libs/shared/src/dtos/comment-dto/creatCommentFilm.dto";
 import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
 import { Roles } from "@app/shared/decorators/role-auth.decorator";
 import { catchError, throwError } from "rxjs";

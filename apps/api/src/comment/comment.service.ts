@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
 import { CommentFilm } from "@app/shared/models/comment.model";
-import { CreatCommentFilmDto } from "./dto/creatCommentFilm.dto";
+import { CreatCommentFilmDto } from "../../../../libs/shared/src/dtos/comment-dto/creatCommentFilm.dto";
 import { Op } from "sequelize";
 
 @Injectable()
