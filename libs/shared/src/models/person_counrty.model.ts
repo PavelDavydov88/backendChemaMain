@@ -2,8 +2,6 @@ import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-t
 import { Person } from "./person.model";
 import { Country } from "./country.model";
 import {ApiProperty} from "@nestjs/swagger";
-// import {Film} from "./film.model";
-// import {Genre} from "./genre.model";
 
 interface FilmGenreCreationAttrs {
   person_id: number,

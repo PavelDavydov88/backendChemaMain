@@ -3,7 +3,7 @@ import { AppModule } from "./app.module";
 import { RpcExceptionFilter } from "./exception.filter/exception.filter";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
-async function bootstrap() {
+export async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = new DocumentBuilder()
       .setTitle('api для онлайн кинотеатра')

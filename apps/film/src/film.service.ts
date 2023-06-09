@@ -121,9 +121,16 @@ export class FilmService {
     response["filmTranslators"] = filmTranslators;
     const [similarFilms] = await this.similarFilmRepository.sequelize.query(
       `select film.name , film.id
-            from film 
+            from film
             LEFT OUTER JOIN similar_film ON similar_film.similar_film_id=film.id
             where similar_film.film_id = ${id}`);
+    // const similarFilms = await this.similarFilmRepository.findAll({
+    //   where: { film_id: id },
+    //   raw: true,
+    //   attributes: [],
+    //   include: [{ model: Film, attributes: ["id", "name"], required: false }]
+    // });
+
     response["similarFilms"] = similarFilms;
 
     return response;
@@ -240,7 +247,11 @@ export class FilmService {
     if ((distinctId == null) || (!distinctId.length)) throw new RpcException(
       new NotFoundException(`Нет подходящих фильмов с такими условиями ${JSON.stringify(filterFilmDto)}!`));
 
-    const finalFilmFilter : Film[] = await this.filmRepository.findAll({where: {"id" :distinctId}, offset : offset, limit : limit})
+    const finalFilmFilter: Film[] = await this.filmRepository.findAll({
+      where: { "id": distinctId },
+      offset: offset,
+      limit: limit
+    });
 
     return finalFilmFilter;
   }
@@ -369,7 +380,10 @@ export class FilmService {
   }
 
   async searchWriters(query: string) {
-    const writers = await this.personRepository.findAll({where: { name: { [Op.substring]: query } }, attributes : ["name"]});
+    const writers = await this.personRepository.findAll({
+      where: { name: { [Op.substring]: query } },
+      attributes: ["name"]
+    });
     return writers.map(person => person.name);
   }
 }
