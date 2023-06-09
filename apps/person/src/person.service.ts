@@ -12,6 +12,7 @@ import {PersonBestFilm} from "@app/shared/models/person_best_film.model";
 import {UpdatePersonDto} from "@app/shared/dtos/person-dto/updatePerson.dto";
 import { DeletePersonDto } from "@app/shared/dtos/person-dto/deletePerson.dto";
 import { RpcException } from "@nestjs/microservices";
+import {Film} from "@app/shared/models/film.model";
 
 @Injectable()
 export class PersonService {
@@ -29,33 +30,35 @@ export class PersonService {
   }
   async getByValue(id : number){
     const person  = await this.personRepository.findOne({ where: { id: id  } } )
+    if(person){
+      const personCountry = await this.personCountryRepository.findAll({ where: { person_id: id }, include: { model:  Country  } } )
+      const personGenre = await this.personGenreRepository.findAll({ where: { person_id: id }, include: { model: Genre } } )
+      const personOccupation = await this.personOccupationRepository.findAll({ where: { person_id: id }, include: { model: Occupation } } )
+      const personBestFilms = await this.bestFilmRepository.findAll({where: { person_id: id }, include: {model: Film}})
 
-    const personCountry = await this.personCountryRepository.findAll({ where: { person_id: id }, include: { model:  Country  } } )
-    const personGenre = await this.personGenreRepository.findAll({ where: { person_id: id }, include: { model: Genre } } )
-    const personOccupation = await this.personOccupationRepository.findAll({ where: { person_id: id }, include: { model: Occupation } } )
-
-    return {
-      person, personCountry, personGenre, personOccupation
+      return {
+        person, personCountry, personGenre, personOccupation, personBestFilms
+      }
+    }else{
+      throw new RpcException(
+          new NotFoundException('Такого работника кино не существует')
+      )
     }
+
   }
-  async deletePerson(dto: DeletePersonDto){
-    const person = await this.personRepository.findOne({
-      where:
-          { name: dto.name }
-    })
+  async deletePerson(id: number){
+    const person =  await this.personRepository.destroy({ where: {
+        id: id
+      }})
     if(!person) throw new RpcException(
       new NotFoundException(`Такого работника кино не существует!`));
-    return await this.personRepository.destroy({ where: {
-      name: dto.name
-      }})
+    else return person
   }
-  async updatePerson(dto: UpdatePersonDto, id: number){
-    const person = await this.personRepository.findOne({ where: {
-      id: id
-      } })
+  async updatePerson(dto: UpdatePersonDto){
+    const person = await this.personRepository.update({ name: dto.newName }, { where: { name : dto.oldName }})
     if(!person)  throw new RpcException(
       new NotFoundException(`Такого работника кино не сущесвует!`));
-    return await this.personRepository.update({ name: dto.newName }, { where: { id : id }})
+    else return person
   }
 
 
@@ -63,7 +66,7 @@ export class PersonService {
     const getPerson = await this.personRepository.findOne({
       where: { name: dto.name }
     })
-    console.log('comment-dto =' + JSON.stringify(dto))
+
     if (getPerson) throw new RpcException(
       new NotFoundException(`это имя уже занято!`));
     const createPerson = await this.personRepository.create(dto)
@@ -77,22 +80,22 @@ export class PersonService {
     const genresPerson = dto.genre;
     const occupationsPerson = dto.occupation;
     const bestFilmPerson = dto.bestFilm;
-    if(!genresPerson == undefined){
+    if(genresPerson){
       const idGenres: number[] = genres.filter(genre => genresPerson.includes(genre.name)).map(id => id.id);
       await this.saveArrayToPersonGenre(createPerson.id, idGenres, this.personGenreRepository);
     }
 
-    if(!occupationsPerson == undefined){
+    if(occupationsPerson){
       const idOccupation: number[] = occupation.filter(occupation => occupationsPerson.includes(occupation.name)).map(id => id.id);
       await this.saveArrayToPersonOccupation(createPerson.id, idOccupation, this.personOccupationRepository)
     }
 
-    if(!bestFilmPerson == undefined){
+    if(bestFilmPerson){
       const idBestFilm: number[] = bestFilm.filter(bestFilm => bestFilmPerson.includes(bestFilm.name)).map(id => id.id);
       await this.saveArrayToPersonBestFilm(createPerson.id, idBestFilm, this.bestFilmRepository)
     }
 
-    if(!country == undefined){
+    if(country){
       await this.personCountryRepository.create({person_id: createPerson.id, country_id: country.id})
 
     }
@@ -108,6 +111,8 @@ export class PersonService {
   }
   private async saveArrayToPersonOccupation(idPerson: number, arrayIdEntity: number[], model: any ){
     for (let i = 0; i < arrayIdEntity.length; i++){
+      console.log("occupationArray" + i)
+
       await model.create({ person_id: idPerson, occupation_id: arrayIdEntity[i] })
     }
   }

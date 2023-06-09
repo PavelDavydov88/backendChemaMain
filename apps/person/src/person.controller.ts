@@ -4,6 +4,7 @@ import { Ctx, MessagePattern, Payload, RmqContext } from "@nestjs/microservices"
 import { SharedService } from "@app/shared/services/shared/shared.service";
 import { CreatePersonDto } from "@app/shared/dtos/person-dto/createPerson.dto";
 import { DeletePersonDto } from "@app/shared/dtos/person-dto/deletePerson.dto";
+import {UpdatePersonDto} from "@app/shared/dtos/person-dto/updatePerson.dto";
 
 @Controller()
 export class PersonController {
@@ -35,17 +36,17 @@ export class PersonController {
   }
 
   @MessagePattern("updatePerson")
-  async updatePerson(@Ctx() context: RmqContext, @Payload() { id: id, dto: dto }) {
+  async updatePerson(@Ctx() context: RmqContext, @Payload() dto: UpdatePersonDto) {
     await this.sharedService.acknowledgeMessage(context);
 
-    return await this.personService.updatePerson(dto, id);
+    return await this.personService.updatePerson(dto);
   }
 
   @MessagePattern("deletePerson")
-  async deletePerson(@Ctx() context: RmqContext, @Payload() dto: DeletePersonDto) {
+  async deletePerson(@Ctx() context: RmqContext, @Payload() id: number) {
     await this.sharedService.acknowledgeMessage(context);
 
-    return await this.personService.deletePerson(dto);
+    return await this.personService.deletePerson(id);
 
   }
 

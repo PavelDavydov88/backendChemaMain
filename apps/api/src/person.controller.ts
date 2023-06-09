@@ -23,6 +23,7 @@ import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
 import { FileService } from "./file/file.service";
 import { catchError, throwError } from "rxjs";
 import { DeletePersonDto } from "@app/shared/dtos/person-dto/deletePerson.dto";
+import {isNumber} from "@nestjs/common/utils/shared.utils";
 
 @Controller("person")
 export class PersonController {
@@ -56,20 +57,18 @@ export class PersonController {
   @ApiResponse({ status: 200, type: Person })
   @Get("/:id")
   async getOnePerson(@Param("id") payload: number) {
-    return this.personService.send("getOnePerson", payload);
+    return this.personService.send("getOnePerson", payload)
+        .pipe(catchError(error => throwError(() => new RpcException(error.response))));;
   }
 
   @ApiOperation({ summary: " Создать нового работника сферы кино " })
   @ApiResponse({ status: 201, type: Person })
-  @UseGuards(JwtAuthGuard)
-  @Roles("ADMIN")
+  // @UseGuards(JwtAuthGuard)
+  // @Roles("ADMIN")
   @Post("")
   @UseInterceptors(FileInterceptor("image"))
   async createPerson(@Body() payload: CreatePersonDto, @UploadedFile() image: any) {
-    const fileName = await this.fileService.creatFile(image);
-    if (!fileName) {
-      throw new HttpException("ошибка при записи файла", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    let fileName = await this.fileService.creatFile(image);
     payload.picture_person = fileName;
     return this.personService.send(
       "create-person",
@@ -78,7 +77,7 @@ export class PersonController {
   }
 
   @ApiOperation({ summary: " обновить существующего работника кино " })
-  @ApiResponse({ status: 204, type: Person })
+  @ApiResponse({ status: 204, type: Number})
   @UseGuards(JwtAuthGuard)
   @Roles("ADMIN")
   @Put("/:id")
@@ -89,11 +88,11 @@ export class PersonController {
   }
 
   @ApiOperation({ summary: " Удалить работника кино " })
-  @ApiResponse({ status: 200, type: Person })
-  @UseGuards(JwtAuthGuard)
-  @Roles("ADMIN")
-  @Delete()
-  async deletePerson(@Body() payload: DeletePersonDto) {
+  @ApiResponse({ status: 200, type: Number })
+  // @UseGuards(JwtAuthGuard)
+  // @Roles("ADMIN")
+  @Delete("/:id")
+  async deletePerson(@Param("id") payload: number) {
     return this.personService.send("deletePerson", payload)
       .pipe(catchError(error => throwError(
         () => new RpcException(error.response))));

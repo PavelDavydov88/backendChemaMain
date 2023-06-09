@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectModel} from "@nestjs/sequelize";
 import {Profile} from "@app/shared/models/profile.model";
 import {UserService} from "../user/user.service";
 import {RolesService} from "../role/role.service";
 import {CreateProfileDto} from "@app/shared/dtos/auth-dto/create-profile.dto";
+import {RpcException} from "@nestjs/microservices";
 
 
 @Injectable()
@@ -34,18 +35,38 @@ export class ProfileService {
 
     async getById(userId: number){
         const profileId = await this.profileRepository.findByPk(userId)
-        return profileId
+        if(profileId) return profileId
+        else{
+            throw new RpcException(
+                new NotFoundException('Профиль не найден')
+            )
+        }
     }
 
-    async update(dto : CreateProfileDto, id: number){
-        const profile = await this.profileRepository.update(dto, {where: {id}});
+    async update(dto : CreateProfileDto){
+        const profile = await this.profileRepository.update(dto, {where: {email : dto.email}});
+        if(profile){
+            const user = await this.userService.updateUser(dto)
+            return {
+                profile, user
+            }
+        }else{
+            throw new RpcException(
+                new NotFoundException("Такого email не существует")
+            )
+        }
 
-        return profile
     }
 
 
     async delete (id: number){
-        return await this.profileRepository.destroy({where: {id}})
+        const profile = await this.profileRepository.destroy({where: {id}})
+        if(!profile){
+            throw new RpcException(
+                new NotFoundException('Такого профиля не сущесвует')
+            )
+        }else return profile
+        // const profile = await this.
 
     }
 

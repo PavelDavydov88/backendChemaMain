@@ -1,17 +1,19 @@
-import { Controller, Get } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import {Controller} from '@nestjs/common';
+import {AuthService} from './auth.service';
 import {Ctx, MessagePattern, Payload, RmqContext} from "@nestjs/microservices";
 import {SharedService} from "@app/shared/services/shared/shared.service";
 import {CreateProfileDto} from "@app/shared/dtos/auth-dto/create-profile.dto";
 import {CreateRoleDto} from "@app/shared/dtos/auth-dto/user-role.dto";
 import {RolesService} from "./role/role.service";
+import {ProfileService} from "./profile/profile.service";
 
 
 @Controller()
 export class AuthController {
   constructor(private readonly authService: AuthService,
               private readonly sharedService: SharedService,
-              private readonly roleService: RolesService
+              private readonly roleService: RolesService,
+              private readonly profileService: ProfileService
               ) {}
 
   @MessagePattern('register')
@@ -30,5 +32,10 @@ export class AuthController {
   @MessagePattern('createRole')
   async createRole(@Ctx() context: RmqContext, @Payload() dto: CreateRoleDto){
     return await this.roleService.createRole(dto)
+  }
+
+  @MessagePattern('deleteProfile')
+  async deleteProfile(@Ctx() context: RmqContext, @Payload() id: number){
+    return await this.profileService.delete(id)
   }
 }

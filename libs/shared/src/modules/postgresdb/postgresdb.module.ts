@@ -21,6 +21,8 @@ import {Roles} from "@app/shared/decorators/role-auth.decorator";
 import {Role} from "@app/shared/models/role.model";
 import {User} from "@app/shared/models/user.model";
 import {UserRoles} from "@app/shared/models/user-role.model";
+import {Film_file} from "@app/shared/models/film_file.model";
+import {Person_file} from "@app/shared/models/person._file.model";
 
 @Module({
     imports: [
@@ -53,7 +55,9 @@ import {UserRoles} from "@app/shared/models/user-role.model";
                 Profile,
                 Role,
                 User,
-                UserRoles
+                UserRoles,
+                Film_file,
+                Person_file
             ],
             autoLoadModels: true,
 

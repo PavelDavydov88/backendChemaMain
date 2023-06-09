@@ -23,7 +23,7 @@ export class Person extends Model<Person, PersonCreationAttrs> {
     nameEng: string;
 
     @ApiProperty({ example: '1.77', description: 'рост' })
-    @Column({ type: DataType.INTEGER, defaultValue : null })
+    @Column({ type: DataType.STRING, defaultValue : null })
     height: number;
 
     @ApiProperty({ example: '1.1.1', description: 'дата рождения' })

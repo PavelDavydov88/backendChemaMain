@@ -1,26 +1,10 @@
-import {
-    Body, CallHandler,
-    ExecutionContext,
-    HttpException,
-    HttpStatus,
-    Inject,
-    Injectable,
-    Post,
-    UnauthorizedException, UseInterceptors
-} from '@nestjs/common';
-
+import {HttpException, HttpStatus, Injectable, NotFoundException, UnauthorizedException} from '@nestjs/common';
 import {JwtService} from "@nestjs/jwt";
 import * as bcryptjs from "bcryptjs"
-import {ClientProxy} from "@nestjs/microservices";
-import {map, Observable} from "rxjs";
-import {TransformInterceptor} from "@app/shared/interceptors/transform.interceptor";
-import {InjectModel} from "@nestjs/sequelize";
-import {User} from "@app/shared/models/user.model";
 import {UserService} from "./user/user.service";
 import {ProfileService} from "./profile/profile.service";
 import {CreateProfileDto} from "@app/shared/dtos/auth-dto/create-profile.dto";
-
-
+import {RpcException} from "@nestjs/microservices";
 
 
 @Injectable()
@@ -45,7 +29,9 @@ export class AuthService {
     const candidate = await this.userService.getUserByEmail(profileDto.email)
 
     if (candidate){
-      throw new HttpException('Пользователь с таким email уже существует', HttpStatus.BAD_REQUEST)
+      throw new RpcException(
+          new NotFoundException('Пользователь с таким email уже существует')
+      )
     }
     const hashPassword = await bcryptjs.hash(profileDto.password, 5);
     const user = await this.profileService.createProfile({...profileDto, password: hashPassword})
@@ -69,7 +55,9 @@ export class AuthService {
     if (user && passwordEquals){
         return user;
     }
-    throw new UnauthorizedException({message:'Некоректный mail или password'})
+    throw new RpcException(
+        new UnauthorizedException({message: 'Некоректный mail или password'})
+    )
 
     }
 

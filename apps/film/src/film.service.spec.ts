@@ -1,11 +1,7 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { FilmController } from './film.controller';
-import { FilmService } from './film.service';
-import { Film } from "@app/shared/models/film.model";
-import { getModelToken } from "@nestjs/sequelize";
-import { FilmModule } from "./film.module";
-import { CountryService } from "../../country/src/country.service";
-import { CountryModule } from "../../country/src/country.module";
+import {Test, TestingModule} from '@nestjs/testing';
+import {FilmService} from './film.service';
+import {Film} from "@app/shared/models/film.model";
+import {getModelToken} from "@nestjs/sequelize";
 
 describe('FilmService', () => {
   let filmService: FilmService;

@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {SharedModule} from "@app/shared/modules/shared/shared.module";
 import {GenreController} from "./genre.controller";
@@ -40,7 +39,7 @@ import {JwtModule} from "@nestjs/jwt";
 
   ],
 
-  controllers: [AppController, GenreController, CountryController, PersonController, ProfileController],
+  controllers: [GenreController, CountryController, PersonController, ProfileController],
 
 })
 export class AppModule {}
