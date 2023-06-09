@@ -23,7 +23,6 @@ import { FileService } from "./file/file.service";
 import { FilterFilmDto } from "@app/shared/dtos/film-dto/filterFilm.dto";
 import { CreatFilmDto } from "@app/shared/dtos/film-dto/creatFilm.dto";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { Person } from "@app/shared/models/person.model";
 import { Film } from "@app/shared/models/film.model";
 
 @Controller("film")
@@ -38,6 +37,7 @@ export class FilmController {
   async getHi() {
     return "hello from film controller!";
   }
+
   @ApiOperation({ summary: " Получить фильм по Id " })
   @ApiResponse({ status: 200, type: Film })
   @Get("/:id")
@@ -75,7 +75,7 @@ export class FilmController {
   }
 
   @ApiOperation({ summary: " Создать новый фильм " })
-  @ApiResponse({ status: 201, type: Film  })
+  @ApiResponse({ status: 201, type: Film })
   @UseGuards(JwtAuthGuard)
   @Roles("ADMIN")
   @Post()
@@ -94,7 +94,7 @@ export class FilmController {
   }
 
   @ApiOperation({ summary: " обновить название фильма " })
-  @ApiResponse({ status: 204, type: Number})
+  @ApiResponse({ status: 204, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles("ADMIN")
   @Put()

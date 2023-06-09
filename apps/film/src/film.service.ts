@@ -119,18 +119,12 @@ export class FilmService {
       include: [{ model: Person, attributes: ["id", "name", "picture_URL"], required: false }]
     });
     response["filmTranslators"] = filmTranslators;
-    const [similarFilms] = await this.similarFilmRepository.sequelize.query(
-      `select film.name , film.id
-            from film
-            LEFT OUTER JOIN similar_film ON similar_film.similar_film_id=film.id
-            where similar_film.film_id = ${id}`);
-    // const similarFilms = await this.similarFilmRepository.findAll({
-    //   where: { film_id: id },
-    //   raw: true,
-    //   attributes: [],
-    //   include: [{ model: Film, attributes: ["id", "name"], required: false }]
-    // });
-
+    const similarFilms = await this.similarFilmRepository.findAll({
+      where: { film_id: id },
+      raw: true,
+      attributes: [],
+      include: [{ model: Film, attributes: ["id", "name"], required: false , association :"similar_film", as: "similar_film_id",}]
+    });
     response["similarFilms"] = similarFilms;
 
     return response;

@@ -18,18 +18,18 @@ export class SimilarFilm extends Model<SimilarFilm, SimilarFilmCreationAttrs> {
   })
   id: number;
 
-  @ForeignKey(() => Film)
+  @ForeignKey(() => Film,)
   @Column({ type: DataType.INTEGER, unique: "uniqueTag", onDelete: "CASCADE", onUpdate: "CASCADE" })
   film_id: number;
 
-  @BelongsTo(() => Film)
+  @BelongsTo(() => Film, { as: 'film', foreignKey: 'film_id' })
   film: Film;
 
   @ForeignKey(() => Film)
   @Column({ type: DataType.INTEGER, unique: "uniqueTag", })
   similar_film_id: number;
 
-  @BelongsTo(() => Film )
+  @BelongsTo(() => Film, { as: 'similar_film', foreignKey: 'similar_film_id' } )
   similar_film: Film;
 
 }
