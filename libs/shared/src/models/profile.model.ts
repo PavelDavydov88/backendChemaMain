@@ -21,7 +21,7 @@ interface ProfileCreationAttrs {
 export class Profile extends Model<Profile, ProfileCreationAttrs >{
 
     @ApiProperty({ example: '1', description: 'Уникальный индефикатор' })
-    @Column({type: DataType.INTEGER, unique: true, autoIncrement:true, primaryKey: true})
+    @Column({type: DataType.INTEGER, unique: true, autoIncrement:true, primaryKey: true, onDelete: 'CASCADE', onUpdate: 'CASCADE'})
     id: number;
 
 

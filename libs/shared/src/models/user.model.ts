@@ -38,7 +38,7 @@ export class User extends Model<User, UserCreationAttrs > {
 
     @ApiProperty({ example: '1', description: 'внешний ключ, ссылкает на PROFILE' })
     @ForeignKey(() => Profile)
-    @Column({type: DataType.INTEGER}) //unique: true,
+    @Column({type: DataType.INTEGER, onDelete: 'CASCADE', onUpdate: 'CASCADE'}) //unique: true,
     userId: number
 
     @BelongsTo(() => Profile)

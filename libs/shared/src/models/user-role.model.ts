@@ -15,12 +15,12 @@ export class UserRoles extends Model<UserRoles >{
 
     @ApiProperty({ example: '1', description: 'внешний ключ, ссылается на ROLE' })
     @ForeignKey(() => Role) //ссылаемся еа таблицы role and user
-    @Column({type: DataType.INTEGER}) //unique: true,
+    @Column({type: DataType.INTEGER, onDelete: 'CASCADE', onUpdate: 'CASCADE'}) //unique: true,
     roleId: number;
 
     @ApiProperty({ example: '1', description: 'внешний ключ, ссылается на PROFILE' })
     @ForeignKey(() => User)
-    @Column({type: DataType.INTEGER}) //unique: true,
+    @Column({type: DataType.INTEGER, onDelete: 'CASCADE', onUpdate: 'CASCADE'}) //unique: true,
     profileId: number;
 
 
