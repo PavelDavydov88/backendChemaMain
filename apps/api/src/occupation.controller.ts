@@ -5,6 +5,7 @@ import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
 import { Roles } from "@app/shared/decorators/role-auth.decorator";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
 import { Occupation } from "@app/shared/models/occupation.model";
+import { isNumber } from "@nestjs/common/utils/shared.utils";
 
 @Controller("occupation")
 export class OccupationController {
@@ -33,7 +34,7 @@ export class OccupationController {
   }
 
   @ApiOperation({ summary: ' Обновить существующую профессию ' })
-  @ApiResponse({ status: 204, type: Occupation })
+  @ApiResponse({ status: 204, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN')
   @Put()
@@ -45,10 +46,10 @@ export class OccupationController {
   }
 
 
-  // @UseGuards(JwtAuthGuard)
-  // @Roles('ADMIN')
-  @ApiOperation({ summary: ' удалить профессию ' })
-  @ApiResponse({ status: 200, type: Occupation })
+  @UseGuards(JwtAuthGuard)
+  @Roles('ADMIN')
+  @ApiOperation({ summary: ' Удалить профессию ' })
+  @ApiResponse({ status: 200, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN')
   @Delete()

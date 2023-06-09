@@ -5,6 +5,10 @@ import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
 import { Roles } from "@app/shared/decorators/role-auth.decorator";
 import { catchError, throwError } from "rxjs";
 import { RpcException } from "@nestjs/microservices";
+import { ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { Genre } from "@app/shared/models/genre.model";
+import { CommentFilm } from "@app/shared/models/comment.model";
+import { Person } from "@app/shared/models/person.model";
 
 @Controller("comment")
 export class CommentController {
@@ -13,6 +17,8 @@ export class CommentController {
   ) {
   }
 
+  @ApiOperation({ summary: ' Получить все комментарии к фильму' })
+  @ApiResponse({ status: 200, type: CommentFilm })
   @Get("/:id")
   async getCommentsByFilmId(@Param("id") id: number) {
     return await this.commentService.getCommentsByFilmId(id)
@@ -21,7 +27,8 @@ export class CommentController {
       });
   }
 
-
+  @ApiOperation({ summary: "Создать новый комментарий" })
+  @ApiResponse({ status: 201, type: CommentFilm })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN', 'USER')
   @Post()
@@ -29,6 +36,8 @@ export class CommentController {
     return await this.commentService.creatCommentFilm(creatCommentFilmDto);
   }
 
+  @ApiOperation({ summary: "Удалить комментарий" })
+  @ApiResponse({ status: 200, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN')
   @Delete("/:id")

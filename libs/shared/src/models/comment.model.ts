@@ -1,5 +1,7 @@
 import { BelongsTo, Column, DataType, ForeignKey, Index, Model, Table, Unique } from "sequelize-typescript";
 import { Film } from "@app/shared/models/film.model";
+import { ApiProperty } from "@nestjs/swagger";
+import { Profile } from "@app/shared/models/profile.model";
 
 interface CommentCreationAttrs {
   userName: string,
@@ -16,21 +18,30 @@ export class CommentFilm extends Model<CommentFilm, CommentCreationAttrs> {
     autoIncrement: true,
     primaryKey: true
   })
+  @ApiProperty({ example: '1', description: 'Уникальный индефикатор' })
   id: number;
-  @Column({ type: DataType.STRING, unique: 'uniqueUserFilm' })
-  userName: string;
+  @ApiProperty({ example: '1', description: 'Id профиля' })
+  @ForeignKey(() => Profile)
+  @Column({type: DataType.INTEGER, unique: 'uniqueProfileFilm', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
+  profileId: number;
 
-  @Column({ type: DataType.STRING, unique: 'uniqueUserFilm' })
+  @BelongsTo(() => Profile)
+  profile: Profile;
+
+  @ApiProperty({ example: 'классный фильм', description: 'комментарий к фильму' })
+  @Column({ type: DataType.STRING, unique: 'uniqueProfileFilm' })
   text: string;
 
+  @ApiProperty({ example: '2', description: 'Id фильма' })
   @ForeignKey(() => Film)
-  @Column({type: DataType.INTEGER, unique: 'uniqueUserFilm', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
+  @Column({type: DataType.INTEGER, unique: 'uniqueProfileFilm', onDelete: 'CASCADE', onUpdate: 'CASCADE'})
   film_id: number;
 
   @BelongsTo(() => Film)
   film: Film;
 
-  @Column({type: DataType.INTEGER, unique: 'uniqueUserFilm',})
+  @ApiProperty({ example: '1', description: 'Id комментария к которому добавляют комментарий' })
+  @Column({type: DataType.INTEGER, unique: 'uniqueProfileFilm',})
   parentCommentId: number;
 
 }
