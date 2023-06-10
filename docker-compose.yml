@@ -4,8 +4,8 @@ services:
     image: rabbitmq:3.11.13-management
     container_name: rabbitmq
     hostname: rabbitmq
-    volumes:
-      - /var/lib/rabbitmq
+#    volumes:
+#      - /var/lib/rabbitmq
     ports:
       - '5672:5672'
       - '15672:15672'
@@ -17,9 +17,6 @@ services:
       dockerfile: ./apps/auth/Dockerfile
     env_file:
       - .env
-    depends_on:
-      - rabbitmq
-      - postgres
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -30,12 +27,6 @@ services:
       dockerfile: ./apps/film/Dockerfile
     env_file:
       - .env
-    depends_on:
-      - rabbitmq
-      - postgres
-      - genre
-      - occupation
-      - country
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -47,12 +38,6 @@ services:
       dockerfile: ./apps/person/Dockerfile
     env_file:
       - .env
-    depends_on:
-      - rabbitmq
-      - postgres
-      - genre
-      - occupation
-      - country
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -63,9 +48,6 @@ services:
       dockerfile: ./apps/genre/Dockerfile
     env_file:
       - .env
-    depends_on:
-      - rabbitmq
-      - postgres
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -76,9 +58,6 @@ services:
       dockerfile: ./apps/country/Dockerfile
     env_file:
       - .env
-    depends_on:
-      - rabbitmq
-      - postgres
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -89,9 +68,7 @@ services:
       dockerfile: ./apps/occupation/Dockerfile
     env_file:
       - .env
-    depends_on:
-      - rabbitmq
-      - postgres
+
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
@@ -105,10 +82,11 @@ services:
     env_file:
       - .env
     depends_on:
-      - auth
+#      - country
+#      - occupation
       - postgres
       - rabbitmq
-#      - auth
+      - auth
 #      - film
       - person
 #      - genre
@@ -118,18 +96,11 @@ services:
       - /usr/src/app/node_modules
     command: npm run start:dev api
   postgres:
+    container_name: postgres
     image: postgres
     env_file:
       - .env
     ports:
       - '5432:5432'
     volumes:
-      - ./db/data:/var/lib/postgresql/data
-  postgres_admin:
-    image: dpage/pgadmin4
-    depends_on:
-      - postgres
-    env_file:
-      - .env
-    ports:
-      - '15432:80'
+      - ./db/data:/var/lib/postgres/data

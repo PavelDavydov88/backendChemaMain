@@ -9,14 +9,22 @@ import * as path from 'path'
 import {FileModule} from "./file/file.module";
 import {ProfileController} from "./profile.controller";
 import {JwtModule} from "@nestjs/jwt";
+import {FilmController} from "./film.controller";
+import {OccupationController} from "./occupation.controller";
+import {CommentController} from "./comment.controller";
+import {CommentModule} from "./comment/comment.module";
+import {SequelizeModule} from "@nestjs/sequelize";
+import {CommentFilm} from "@app/shared/models/comment.model";
 @Module({
   imports: [ConfigModule.forRoot({
     isGlobal: true,
     envFilePath: './.env',
   }),
     ServeStaticModule.forRoot({
-      rootPath: path.resolve(__dirname, '..', '..',  'static')
+      rootPath: path.resolve(__dirname, '..', '..', 'static')
     }),
+
+    CommentModule,
     FileModule,
     SharedModule.registerRmq('AUTH_SERVICE', process.env.RABBITMQ_AUTH_QUEUE),
     SharedModule.registerRmq('FILM_SERVICE', process.env.RABBITMQ_FILM_QUEUE),
@@ -39,7 +47,13 @@ import {JwtModule} from "@nestjs/jwt";
 
   ],
 
-  controllers: [GenreController, CountryController, PersonController, ProfileController],
+  controllers: [GenreController,
+    CountryController,
+    PersonController,
+    ProfileController,
+    FilmController,
+    OccupationController,
+    CommentController],
 
 })
 export class AppModule {}

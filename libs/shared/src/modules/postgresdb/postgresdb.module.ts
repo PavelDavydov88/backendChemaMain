@@ -23,6 +23,7 @@ import {User} from "@app/shared/models/user.model";
 import {UserRoles} from "@app/shared/models/user-role.model";
 import {Film_file} from "@app/shared/models/film_file.model";
 import {Person_file} from "@app/shared/models/person._file.model";
+import {CommentFilm} from "@app/shared/models/comment.model";
 
 @Module({
     imports: [
@@ -57,7 +58,8 @@ import {Person_file} from "@app/shared/models/person._file.model";
                 User,
                 UserRoles,
                 Film_file,
-                Person_file
+                Person_file,
+                CommentFilm
             ],
             autoLoadModels: true,
 
