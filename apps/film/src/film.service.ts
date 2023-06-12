@@ -64,42 +64,42 @@ export class FilmService {
     });
     response["filmDirector"] = filmDirector;
     const filmWriter = await this.filmOccupationRepository.findAll({
-      where: { film_id: id, occupation_id: 15 },
+      where: { film_id: id, occupation_id: [3, 15] },
       raw: true,
       attributes: [],
       include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["filmWriter"] = filmWriter;
     const filmProducer = await this.filmOccupationRepository.findAll({
-      where: { film_id: id, occupation_id: 6 },
+      where: { film_id: id, occupation_id: 2 },
       raw: true,
       attributes: [],
       include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["filmProducer"] = filmProducer;
     const filmOperator = await this.filmOccupationRepository.findAll({
-      where: { film_id: id, occupation_id: 10 },
+      where: { film_id: id, occupation_id: 8 },
       raw: true,
       attributes: [],
       include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["filmOperator"] = filmOperator;
     const filmComposer = await this.filmOccupationRepository.findAll({
-      where: { film_id: id, occupation_id: 16 },
+      where: { film_id: id, occupation_id: 9 },
       raw: true,
       attributes: [],
       include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["filmComposer"] = filmComposer;
     const filmArtist = await this.filmOccupationRepository.findAll({
-      where: { film_id: id, occupation_id: 17 },
+      where: { film_id: id, occupation_id: 6 },
       raw: true,
       attributes: [],
       include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["filmArtist"] = filmArtist;
     const filmEditor = await this.filmOccupationRepository.findAll({
-      where: { film_id: id, occupation_id: 9 },
+      where: { film_id: id, occupation_id: 7 },
       raw: true,
       attributes: [],
       include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
@@ -111,9 +111,10 @@ export class FilmService {
       attributes: [],
       include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
+    console.log("mainActors = " + JSON.stringify(mainActors));
     response["mainActors"] = mainActors;
     const filmTranslators = await this.filmOccupationRepository.findAll({
-      where: { film_id: id, occupation_id: 14 },
+      where: { film_id: id, occupation_id: 11 },
       raw: true,
       attributes: [],
       include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
@@ -130,7 +131,7 @@ export class FilmService {
     return response;
   }
 
-  async getFilms(filterFilmDto: FilterFilmDto) {
+  async getFilmsFilters(filterFilmDto: FilterFilmDto) {
     const genre = filterFilmDto.genre === undefined ? "0" : filterFilmDto.genre;
     const country = filterFilmDto.country === undefined ? "0" : filterFilmDto.country;
     const artist = filterFilmDto.artist === undefined ? "0" : filterFilmDto.artist;
@@ -304,7 +305,7 @@ export class FilmService {
     await this.saveArrayToPerson_Occupation(createFilm.id, idFilmComposers, this.filmOccupationRepository, composer.id);
 
     const idFilmArtists: number[] = persons.filter(person => filmArtists.includes(person.name)).map(id => id.id);
-    const artist = await this.occupationRepository.findOne({ where: { name: "Актер" } });
+    const artist = await this.occupationRepository.findOne({ where: { name: "Художник" } });
     await this.saveArrayToPerson_Occupation(createFilm.id, idFilmArtists, this.filmOccupationRepository, artist.id);
 
     const idFilmEditors: number[] = persons.filter(person => filmEditors.includes(person.name)).map(id => id.id);
@@ -379,5 +380,9 @@ export class FilmService {
       attributes: ["name"]
     });
     return writers.map(person => person.name);
+  }
+
+  async getAllFilms() {
+     return this.filmRepository.findAll()
   }
 }

@@ -38,7 +38,19 @@ export class FilmController {
     return "hello from film controller!";
   }
 
-  @ApiOperation({ summary: " Получить фильм по Id ", tags: ['film'] })
+  @ApiOperation({ summary: " Получить все фильмы " })
+  @ApiResponse({ status: 200, type: Film })
+  @Get("/all")
+  async getFilmAllFilms() {
+    return this.filmService.send(
+      {
+        cmd: "get-films-all"
+      },
+      {}
+    ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
+  }
+
+  @ApiOperation({ summary: " Получить фильм по Id " })
   @ApiResponse({ status: 200, type: Film })
   @Get("/:id")
   async getFilmById(@Param("id") id: number) {
@@ -50,19 +62,19 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Получить все фильмы ", tags: ['film'] })
+  @ApiOperation({ summary: " Получить все фильмы по фильтру" })
   @ApiResponse({ status: 200, type: Film })
   @Get()
   async getFilms(@Query() filterFilmDto: FilterFilmDto) {
     return this.filmService.send(
       {
-        cmd: "get-films"
+        cmd: "get-films-filters"
       },
       filterFilmDto
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Получить всех режиссеров ", tags: ['film'] })
+  @ApiOperation({ summary: " Получить всех режиссеров " })
   @ApiResponse({ status: 200, type: Film })
   @Get("/search/writers")
   async searchWriters(@Query("query") query: string) {
@@ -74,7 +86,7 @@ export class FilmController {
     );
   }
 
-  @ApiOperation({ summary: " Создать новый фильм ", tags: ['film'] })
+  @ApiOperation({ summary: " Создать новый фильм " })
   @ApiResponse({ status: 201, type: Film })
   @UseGuards(JwtAuthGuard)
   @Roles("ADMIN")
@@ -83,8 +95,8 @@ export class FilmController {
   async creatFilm(@Body() creatFilmDto: CreatFilmDto, @UploadedFile() file) {
 
     const fileName = await this.fileService.creatFile(file);
-    if (!fileName) throw new HttpException("Ошибка при обработке файла, фильм не был создан", HttpStatus.BAD_REQUEST);
-    creatFilmDto.picture_film = fileName;
+     if (!fileName) {creatFilmDto.picture_film = null;} else {creatFilmDto.picture_film = fileName;}
+
     return this.filmService.send(
       {
         cmd: "creat-film"
@@ -93,7 +105,7 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " обновить название фильма ", tags: ['film'] })
+  @ApiOperation({ summary: " обновить название фильма " })
   @ApiResponse({ status: 204, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles("ADMIN")
@@ -105,7 +117,7 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Удалить фильм ", tags: ['film'] })
+  @ApiOperation({ summary: " Удалить фильм " })
   @ApiResponse({ status: 200, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles("ADMIN")

@@ -1,4 +1,4 @@
-import {BelongsTo, BelongsToMany, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
+import {BelongsTo, Column, DataType, ForeignKey, Model, Table} from "sequelize-typescript";
 import {ApiProperty} from "@nestjs/swagger";
 
 
@@ -11,7 +11,7 @@ interface FilmCreationAttrs {
 export class Film extends Model<Film, FilmCreationAttrs> {
 
     @ApiProperty({ example: '1', description: 'Уникальный индефикатор' })
-    @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true, onDelete: 'CASCADE', onUpdate: 'CASCADE' })
+    @Column({ type: DataType.INTEGER, unique: true, autoIncrement: true, primaryKey: true })
     id: number;
     @ApiProperty({ example: 'ОНО', description: 'Имя фильма на русском' })
     @Column({ type: DataType.STRING,  defaultValue : null})
@@ -95,6 +95,8 @@ export class Film extends Model<Film, FilmCreationAttrs> {
     @Column({ type: DataType.STRING, defaultValue : null})
     picture_film: string;
 
-
+    // @ApiProperty({ example: '.png', description: 'картинка local' })
+    // @Column({ type: DataType.STRING, defaultValue : null})
+    // picture_local_URL: string;
 
 }
