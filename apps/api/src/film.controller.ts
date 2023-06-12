@@ -38,6 +38,18 @@ export class FilmController {
     return "hello from film controller!";
   }
 
+  @ApiOperation({ summary: " Получить все фильмы " })
+  @ApiResponse({ status: 200, type: Film })
+  @Get("/all")
+  async getFilmAllFilms() {
+    return this.filmService.send(
+      {
+        cmd: "get-films-all"
+      },
+      {}
+    ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
+  }
+
   @ApiOperation({ summary: " Получить фильм по Id " })
   @ApiResponse({ status: 200, type: Film })
   @Get("/:id")
@@ -50,13 +62,13 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Получить все фильмы " })
+  @ApiOperation({ summary: " Получить все фильмы по фильтру" })
   @ApiResponse({ status: 200, type: Film })
   @Get()
   async getFilms(@Query() filterFilmDto: FilterFilmDto) {
     return this.filmService.send(
       {
-        cmd: "get-films"
+        cmd: "get-films-filters"
       },
       filterFilmDto
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
@@ -83,8 +95,8 @@ export class FilmController {
   async creatFilm(@Body() creatFilmDto: CreatFilmDto, @UploadedFile() file) {
 
     const fileName = await this.fileService.creatFile(file);
-    if (!fileName) throw new HttpException("Ошибка при обработке файла, фильм не был создан", HttpStatus.BAD_REQUEST);
-    creatFilmDto.picture_film = fileName;
+     if (!fileName) {creatFilmDto.picture_film = null;} else {creatFilmDto.picture_film = fileName;}
+
     return this.filmService.send(
       {
         cmd: "creat-film"

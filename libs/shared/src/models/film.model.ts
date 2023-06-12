@@ -95,8 +95,8 @@ export class Film extends Model<Film, FilmCreationAttrs> {
     @Column({ type: DataType.STRING, defaultValue : null})
     picture_film: string;
 
-    @ApiProperty({ example: '.png', description: 'картинка local' })
-    @Column({ type: DataType.STRING, defaultValue : null})
-    picture_local_URL: string;
+    // @ApiProperty({ example: '.png', description: 'картинка local' })
+    // @Column({ type: DataType.STRING, defaultValue : null})
+    // picture_local_URL: string;
 
 }

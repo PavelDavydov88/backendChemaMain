@@ -17,9 +17,14 @@ export class FilmController {
     return await this.filmService.getFilmById(id);
   }
 
-  @MessagePattern({ cmd: "get-films" })
+  @MessagePattern({ cmd: "get-films-filters" })
   async getFilms(filterFilmDto: FilterFilmDto) {
-    return await this.filmService.getFilms(filterFilmDto);
+    return await this.filmService.getFilmsFilters(filterFilmDto);
+  }
+
+  @MessagePattern({ cmd: "get-films-all" })
+  async getAllFilms() {
+    return await this.filmService.getAllFilms();
   }
 
   @MessagePattern({ cmd: "search-writers" })

@@ -67,9 +67,9 @@ export class PersonController {
   @UseInterceptors(FileInterceptor("image"))
   async createPerson(@Body() payload: CreatePersonDto, @UploadedFile() image: any) {
     const fileName = await this.fileService.creatFile(image);
-    if (!fileName) {
-      throw new HttpException("ошибка при записи файла", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    // if (!fileName) {
+    //   throw new HttpException("ошибка при записи файла", HttpStatus.INTERNAL_SERVER_ERROR);
+    // }
     payload.picture_person = fileName;
     return this.personService.send(
       "create-person",

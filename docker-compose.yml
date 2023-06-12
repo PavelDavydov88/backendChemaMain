@@ -17,12 +17,12 @@ services:
       dockerfile: ./apps/auth/Dockerfile
     env_file:
       - .env
-    depends_on:
-      - rabbitmq
-      - postgres
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+#    depends_on:
+#      - rabbitmq
+#      - postgres
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
     command: npm run start:dev auth
   film:
     build:
@@ -30,15 +30,15 @@ services:
       dockerfile: ./apps/film/Dockerfile
     env_file:
       - .env
-    depends_on:
-      - rabbitmq
-      - postgres
-      - genre
-      - occupation
-      - country
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+#    depends_on:
+#      - rabbitmq
+#      - postgres
+#      - genre
+#      - occupation
+#      - country
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
     command: npm run start:dev film
 
   person:
@@ -47,15 +47,15 @@ services:
       dockerfile: ./apps/person/Dockerfile
     env_file:
       - .env
-    depends_on:
-      - rabbitmq
-      - postgres
-      - genre
-      - occupation
-      - country
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+#    depends_on:
+#      - rabbitmq
+#      - postgres
+#      - genre
+#      - occupation
+#      - country
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
     command: npm run start:dev person
   genre:
     build:
@@ -63,12 +63,12 @@ services:
       dockerfile: ./apps/genre/Dockerfile
     env_file:
       - .env
-    depends_on:
-      - rabbitmq
-      - postgres
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+#    depends_on:
+#      - rabbitmq
+#      - postgres
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
     command: npm run start:dev genre
   country:
     build:
@@ -76,12 +76,12 @@ services:
       dockerfile: ./apps/country/Dockerfile
     env_file:
       - .env
-    depends_on:
-      - rabbitmq
-      - postgres
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+#    depends_on:
+#      - rabbitmq
+#      - postgres
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
     command: npm run start:dev country
   occupation:
     build:
@@ -89,12 +89,12 @@ services:
       dockerfile: ./apps/occupation/Dockerfile
     env_file:
       - .env
-    depends_on:
-      - rabbitmq
-      - postgres
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+#    depends_on:
+#      - rabbitmq
+#      - postgres
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
     command: npm run start:dev occupation
   api:
     build:
@@ -105,31 +105,30 @@ services:
     env_file:
       - .env
     depends_on:
-      - auth
+#      - auth
       - postgres
       - rabbitmq
-#      - auth
-#      - film
-      - person
+      - film
+#      - person
 #      - genre
-
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
+#    volumes:
+#      - .:/usr/src/app
+#      - /usr/src/app/node_modules
     command: npm run start:dev api
   postgres:
-    image: postgres
+#    deploy:
+#      resources:
+#        limits:
+#          cpus: '1'
+#          memory: 100M
+#        reservations:
+#          cpus: '0.5'
+#          memory: 50M
+    container_name: postgres
+    image: postgres:14
     env_file:
       - .env
     ports:
-      - '5432:5432'
-    volumes:
-      - ./db/data:/var/lib/postgresql/data
-  postgres_admin:
-    image: dpage/pgadmin4
-    depends_on:
-      - postgres
-    env_file:
-      - .env
-    ports:
-      - '15432:80'
+      - 5432:5432
+#    volumes:
+#      - ./db/data:/var/lib/postgresql/data
