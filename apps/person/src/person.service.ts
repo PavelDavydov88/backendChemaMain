@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
+import {Injectable, NotFoundException} from "@nestjs/common";
 import {Person} from "@app/shared/models/person.model";
 import {InjectModel} from "@nestjs/sequelize";
 import {PersonCountry} from "@app/shared/models/person_counrty.model";
@@ -10,8 +10,7 @@ import {Occupation} from "@app/shared/models/occupation.model";
 import {CreatePersonDto} from "@app/shared/dtos/person-dto/createPerson.dto";
 import {PersonBestFilm} from "@app/shared/models/person_best_film.model";
 import {UpdatePersonDto} from "@app/shared/dtos/person-dto/updatePerson.dto";
-import { DeletePersonDto } from "@app/shared/dtos/person-dto/deletePerson.dto";
-import { RpcException } from "@nestjs/microservices";
+import {RpcException} from "@nestjs/microservices";
 import {Film} from "@app/shared/models/film.model";
 
 @Injectable()

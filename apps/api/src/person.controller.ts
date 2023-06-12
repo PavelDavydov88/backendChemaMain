@@ -3,8 +3,6 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
-  HttpStatus,
   Inject,
   Param,
   Post,
@@ -13,17 +11,16 @@ import {
   UseGuards,
   UseInterceptors
 } from "@nestjs/common";
-import { ClientProxy, RpcException } from "@nestjs/microservices";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { Person } from "@app/shared/models/person.model";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { CreatePersonDto } from "@app/shared/dtos/person-dto/createPerson.dto";
-import { Roles } from "@app/shared/decorators/role-auth.decorator";
-import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
-import { FileService } from "./file/file.service";
-import { catchError, throwError } from "rxjs";
-import { DeletePersonDto } from "@app/shared/dtos/person-dto/deletePerson.dto";
-import {isNumber} from "@nestjs/common/utils/shared.utils";
+import {ClientProxy, RpcException} from "@nestjs/microservices";
+import {ApiOperation, ApiResponse} from "@nestjs/swagger";
+import {Person} from "@app/shared/models/person.model";
+import {FileInterceptor} from "@nestjs/platform-express";
+import {CreatePersonDto} from "@app/shared/dtos/person-dto/createPerson.dto";
+import {Roles} from "@app/shared/decorators/role-auth.decorator";
+import {JwtAuthGuard} from "../../auth/src/jwt-auth.guard";
+import {FileService} from "./file/file.service";
+import {catchError, throwError} from "rxjs";
+import {UpdatePersonDto} from "@app/shared/dtos/person-dto/updatePerson.dto";
 
 @Controller("person")
 export class PersonController {
@@ -63,13 +60,14 @@ export class PersonController {
 
   @ApiOperation({ summary: " Создать нового работника сферы кино " })
   @ApiResponse({ status: 201, type: Person })
-  // @UseGuards(JwtAuthGuard)
-  // @Roles("ADMIN")
+  @UseGuards(JwtAuthGuard)
+  @Roles("ADMIN")
   @Post("")
   @UseInterceptors(FileInterceptor("image"))
   async createPerson(@Body() payload: CreatePersonDto, @UploadedFile() image: any) {
     let fileName = await this.fileService.creatFile(image);
-    payload.picture_person = fileName;
+    if(fileName) payload.picture_person = fileName
+    else payload.picture_person = ' '
     return this.personService.send(
       "create-person",
       payload
@@ -80,8 +78,8 @@ export class PersonController {
   @ApiResponse({ status: 204, type: Number})
   @UseGuards(JwtAuthGuard)
   @Roles("ADMIN")
-  @Put("/:id")
-  async updatePerson(@Param("id") payload: any) {
+  @Put()
+  async updatePerson( payload: UpdatePersonDto) {
     return this.personService.send("updatePerson", payload)
       .pipe(catchError(error => throwError(
         () => new RpcException(error.response))));
@@ -89,8 +87,8 @@ export class PersonController {
 
   @ApiOperation({ summary: " Удалить работника кино " })
   @ApiResponse({ status: 200, type: Number })
-  // @UseGuards(JwtAuthGuard)
-  // @Roles("ADMIN")
+  @UseGuards(JwtAuthGuard)
+  @Roles("ADMIN")
   @Delete("/:id")
   async deletePerson(@Param("id") payload: number) {
     return this.personService.send("deletePerson", payload)

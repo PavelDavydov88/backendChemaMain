@@ -1,9 +1,8 @@
-import { Controller } from "@nestjs/common";
-import { PersonService } from "./person.service";
-import { Ctx, MessagePattern, Payload, RmqContext } from "@nestjs/microservices";
-import { SharedService } from "@app/shared/services/shared/shared.service";
-import { CreatePersonDto } from "@app/shared/dtos/person-dto/createPerson.dto";
-import { DeletePersonDto } from "@app/shared/dtos/person-dto/deletePerson.dto";
+import {Controller} from "@nestjs/common";
+import {PersonService} from "./person.service";
+import {Ctx, MessagePattern, Payload, RmqContext} from "@nestjs/microservices";
+import {SharedService} from "@app/shared/services/shared/shared.service";
+import {CreatePersonDto} from "@app/shared/dtos/person-dto/createPerson.dto";
 import {UpdatePersonDto} from "@app/shared/dtos/person-dto/updatePerson.dto";
 
 @Controller()

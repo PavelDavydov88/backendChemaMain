@@ -1,14 +1,10 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, UseGuards } from "@nestjs/common";
-import { CommentService } from "./comment/comment.service";
-import { CreatCommentFilmDto } from "../../../libs/shared/src/dtos/comment-dto/creatCommentFilm.dto";
-import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
-import { Roles } from "@app/shared/decorators/role-auth.decorator";
-import { catchError, throwError } from "rxjs";
-import { RpcException } from "@nestjs/microservices";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { Genre } from "@app/shared/models/genre.model";
-import { CommentFilm } from "@app/shared/models/comment.model";
-import { Person } from "@app/shared/models/person.model";
+import {Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, UseGuards} from "@nestjs/common";
+import {CommentService} from "./comment/comment.service";
+import {CreatCommentFilmDto} from "../../../libs/shared/src/dtos/comment-dto/creatCommentFilm.dto";
+import {JwtAuthGuard} from "../../auth/src/jwt-auth.guard";
+import {Roles} from "@app/shared/decorators/role-auth.decorator";
+import {ApiOperation, ApiResponse} from "@nestjs/swagger";
+import {CommentFilm} from "@app/shared/models/comment.model";
 
 @Controller("comment")
 export class CommentController {

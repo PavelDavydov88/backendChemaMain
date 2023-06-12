@@ -60,63 +60,63 @@ export class FilmService {
       where: { film_id: id, occupation_id: 1 },
       raw: true,
       attributes: [],
-      include: [{ model: Person, attributes: ["id", "name", "picture_URL"], required: false }]
+      include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["filmDirector"] = filmDirector;
     const filmWriter = await this.filmOccupationRepository.findAll({
       where: { film_id: id, occupation_id: 15 },
       raw: true,
       attributes: [],
-      include: [{ model: Person, attributes: ["id", "name", "picture_URL"], required: false }]
+      include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["filmWriter"] = filmWriter;
     const filmProducer = await this.filmOccupationRepository.findAll({
       where: { film_id: id, occupation_id: 6 },
       raw: true,
       attributes: [],
-      include: [{ model: Person, attributes: ["id", "name", "picture_URL"], required: false }]
+      include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["filmProducer"] = filmProducer;
     const filmOperator = await this.filmOccupationRepository.findAll({
       where: { film_id: id, occupation_id: 10 },
       raw: true,
       attributes: [],
-      include: [{ model: Person, attributes: ["id", "name", "picture_URL"], required: false }]
+      include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["filmOperator"] = filmOperator;
     const filmComposer = await this.filmOccupationRepository.findAll({
       where: { film_id: id, occupation_id: 16 },
       raw: true,
       attributes: [],
-      include: [{ model: Person, attributes: ["id", "name", "picture_URL"], required: false }]
+      include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["filmComposer"] = filmComposer;
     const filmArtist = await this.filmOccupationRepository.findAll({
       where: { film_id: id, occupation_id: 17 },
       raw: true,
       attributes: [],
-      include: [{ model: Person, attributes: ["id", "name", "picture_URL"], required: false }]
+      include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["filmArtist"] = filmArtist;
     const filmEditor = await this.filmOccupationRepository.findAll({
       where: { film_id: id, occupation_id: 9 },
       raw: true,
       attributes: [],
-      include: [{ model: Person, attributes: ["id", "name", "picture_URL"], required: false }]
+      include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["filmEditor"] = filmEditor;
     const mainActors = await this.mainActorRepository.findAll({
       where: { film_id: id },
       raw: true,
       attributes: [],
-      include: [{ model: Person, attributes: ["id", "name", "picture_URL"], required: false }]
+      include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["mainActors"] = mainActors;
     const filmTranslators = await this.filmOccupationRepository.findAll({
       where: { film_id: id, occupation_id: 14 },
       raw: true,
       attributes: [],
-      include: [{ model: Person, attributes: ["id", "name", "picture_URL"], required: false }]
+      include: [{ model: Person, attributes: ["id", "name", "picture_person"], required: false }]
     });
     response["filmTranslators"] = filmTranslators;
     const similarFilms = await this.similarFilmRepository.findAll({

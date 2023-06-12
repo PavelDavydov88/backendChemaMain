@@ -13,12 +13,8 @@ export class UserService {
     }
     async getUserByEmail(email: string){
         const user = await this.userRepository.findOne({where: {email}, include: {all: true}})
-        if(user) return user
-        else{
-            throw new RpcException(
-                new NotFoundException("Пользователя с таким email не существует")
-            )
-        }
+        return user
+
     }
 
     async deleteUser(dto : CreateProfileDto){
