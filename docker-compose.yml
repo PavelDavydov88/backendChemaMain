@@ -82,14 +82,14 @@ services:
     env_file:
       - .env
     depends_on:
-      - country
-      - occupation
+#      - country
+#      - occupation
       - postgres
       - rabbitmq
       - auth
-      - film
+#      - film
       - person
-      - genre
+#      - genre
 
     volumes:
       - .:/usr/src/app

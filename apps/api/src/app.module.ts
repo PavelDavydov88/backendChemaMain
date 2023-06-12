@@ -21,7 +21,7 @@ import {CommentFilm} from "@app/shared/models/comment.model";
     envFilePath: './.env',
   }),
     ServeStaticModule.forRoot({
-      rootPath: path.resolve(__dirname, '..', '..', 'static')
+      rootPath: path.resolve(__dirname, '..', '..', '..', 'picture')
     }),
 
     CommentModule,

@@ -11,7 +11,7 @@ export class CountryController {
   constructor(@Inject("COUNTRY_SERVICE") private readonly countryService: ClientProxy) {
   }
 
-  @ApiOperation({ summary: " Получить все страны " })
+  @ApiOperation({ summary: " Получить все страны ", tags: ['country'] })
   @ApiResponse({ status: 200, type: [Country] })
   @Get()
   async getAllCountry() {
@@ -20,7 +20,7 @@ export class CountryController {
     );
   }
 
-  @ApiOperation({ summary: " Создать страну " })
+  @ApiOperation({ summary: " Создать страну ", tags: ['occupation'] })
   @ApiResponse({ status: 200, type: Country })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN')
@@ -32,7 +32,7 @@ export class CountryController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Обновить страну " })
+  @ApiOperation({ summary: " Обновить страну ", tags: ['occupation'] })
   @ApiResponse({ status: 200, type: Country })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN')
@@ -44,7 +44,7 @@ export class CountryController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Удалить страну " })
+  @ApiOperation({ summary: " Удалить страну ", tags: ['occupation'] })
   @ApiResponse({ status: 200, type: Country })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN')

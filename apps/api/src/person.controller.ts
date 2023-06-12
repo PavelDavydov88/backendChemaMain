@@ -38,7 +38,7 @@ export class PersonController {
     };
   }
 
-  @ApiOperation({ summary: " Получить всех работников кино " })
+  @ApiOperation({ summary: " Получить всех работников кино ", tags: ['person'] })
   @ApiResponse({ status: 200, type: Person })
   @Get()
   async getPersons() {
@@ -50,7 +50,7 @@ export class PersonController {
     );
   }
 
-  @ApiOperation({ summary: " Получить одного работника кино, включая смежные с ним бд " })
+  @ApiOperation({ summary: " Получить одного работника кино, включая смежные с ним бд ", tags: ['person'] })
   @ApiResponse({ status: 200, type: Person })
   @Get("/:id")
   async getOnePerson(@Param("id") payload: number) {
@@ -58,7 +58,7 @@ export class PersonController {
         .pipe(catchError(error => throwError(() => new RpcException(error.response))));;
   }
 
-  @ApiOperation({ summary: " Создать нового работника сферы кино " })
+  @ApiOperation({ summary: " Создать нового работника сферы кино ", tags: ['person'] })
   @ApiResponse({ status: 201, type: Person })
   @UseGuards(JwtAuthGuard)
   @Roles("ADMIN")
@@ -74,18 +74,18 @@ export class PersonController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " обновить существующего работника кино " })
+  @ApiOperation({ summary: " обновить существующего работника кино ", tags: ['person'] })
   @ApiResponse({ status: 204, type: Number})
   @UseGuards(JwtAuthGuard)
   @Roles("ADMIN")
   @Put()
-  async updatePerson( payload: UpdatePersonDto) {
+  async updatePerson(@Body() payload: UpdatePersonDto) {
     return this.personService.send("updatePerson", payload)
       .pipe(catchError(error => throwError(
         () => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Удалить работника кино " })
+  @ApiOperation({ summary: " Удалить работника кино ", tags: ['person'] })
   @ApiResponse({ status: 200, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles("ADMIN")

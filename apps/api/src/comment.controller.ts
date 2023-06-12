@@ -13,7 +13,7 @@ export class CommentController {
   ) {
   }
 
-  @ApiOperation({ summary: ' Получить все комментарии к фильму' })
+  @ApiOperation({ summary: ' Получить все комментарии к фильму', tags: ['film'] })
   @ApiResponse({ status: 200, type: CommentFilm })
   @Get("/:id")
   async getCommentsByFilmId(@Param("id") id: number) {
@@ -23,7 +23,7 @@ export class CommentController {
       });
   }
 
-  @ApiOperation({ summary: "Создать новый комментарий" })
+  @ApiOperation({ summary: "Создать новый комментарий", tags: ['film'] })
   @ApiResponse({ status: 201, type: CommentFilm })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN', 'USER')
@@ -32,7 +32,7 @@ export class CommentController {
     return await this.commentService.creatCommentFilm(creatCommentFilmDto);
   }
 
-  @ApiOperation({ summary: "Удалить комментарий" })
+  @ApiOperation({ summary: "Удалить комментарий", tags: ['film'] })
   @ApiResponse({ status: 200, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN')

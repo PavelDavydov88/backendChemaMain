@@ -11,7 +11,7 @@ export class FileService {
             const fileBuffer = Buffer.from(file.buffer)
             const fileExtension = "jpg";
             const fileName = uuid.v4() + '.' + fileExtension;
-            const filePath = path.resolve(__dirname, '..','..', 'static');
+            const filePath = path.resolve(__dirname, '..','..', '..', 'picture');
             if (!fs.existsSync(filePath)) {
                 fs.mkdirSync(filePath, {recursive: true});
             }
@@ -26,7 +26,7 @@ export class FileService {
     }
 
     async deleteFile(name) {
-        const filePath = path.resolve(__dirname, '..','..', 'static', name);
+        const filePath = path.resolve(__dirname, '..','..', '..', 'picture', name);
         fs.unlink(filePath,  err => {
             if (err)  throw err // не удалось удалить файл
         });

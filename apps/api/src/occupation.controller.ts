@@ -12,7 +12,7 @@ export class OccupationController {
   constructor(@Inject("OCCUPATION_SERVICE") private readonly occupationService: ClientProxy) {
   }
 
-  @ApiOperation({ summary: ' Получить список всех профессий ' })
+  @ApiOperation({ summary: ' Получить список всех профессий ', tags: ['occupation'] })
   @ApiResponse({ status: 200, type: Occupation })
   @Get()
   async getAllOccupation() {
@@ -21,7 +21,7 @@ export class OccupationController {
     );
   }
 
-  @ApiOperation({ summary: ' Создать новую профессию ' })
+  @ApiOperation({ summary: ' Создать новую профессию ', tags: ['occupation'] })
   @ApiResponse({ status: 201, type: Occupation })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN', 'USER')
@@ -33,7 +33,7 @@ export class OccupationController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: ' Обновить существующую профессию ' })
+  @ApiOperation({ summary: ' Обновить существующую профессию ', tags: ['occupation'] })
   @ApiResponse({ status: 204, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN')
@@ -48,7 +48,7 @@ export class OccupationController {
 
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN')
-  @ApiOperation({ summary: ' Удалить профессию ' })
+  @ApiOperation({ summary: ' Удалить профессию ', tags: ['occupation'] })
   @ApiResponse({ status: 200, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles('ADMIN')

@@ -38,7 +38,7 @@ export class FilmController {
     return "hello from film controller!";
   }
 
-  @ApiOperation({ summary: " Получить фильм по Id " })
+  @ApiOperation({ summary: " Получить фильм по Id ", tags: ['film'] })
   @ApiResponse({ status: 200, type: Film })
   @Get("/:id")
   async getFilmById(@Param("id") id: number) {
@@ -50,7 +50,7 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Получить все фильмы " })
+  @ApiOperation({ summary: " Получить все фильмы ", tags: ['film'] })
   @ApiResponse({ status: 200, type: Film })
   @Get()
   async getFilms(@Query() filterFilmDto: FilterFilmDto) {
@@ -62,7 +62,7 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Получить всех режиссеров " })
+  @ApiOperation({ summary: " Получить всех режиссеров ", tags: ['film'] })
   @ApiResponse({ status: 200, type: Film })
   @Get("/search/writers")
   async searchWriters(@Query("query") query: string) {
@@ -74,7 +74,7 @@ export class FilmController {
     );
   }
 
-  @ApiOperation({ summary: " Создать новый фильм " })
+  @ApiOperation({ summary: " Создать новый фильм ", tags: ['film'] })
   @ApiResponse({ status: 201, type: Film })
   @UseGuards(JwtAuthGuard)
   @Roles("ADMIN")
@@ -93,7 +93,7 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " обновить название фильма " })
+  @ApiOperation({ summary: " обновить название фильма ", tags: ['film'] })
   @ApiResponse({ status: 204, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles("ADMIN")
@@ -105,7 +105,7 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Удалить фильм " })
+  @ApiOperation({ summary: " Удалить фильм ", tags: ['film'] })
   @ApiResponse({ status: 200, type: Number })
   @UseGuards(JwtAuthGuard)
   @Roles("ADMIN")

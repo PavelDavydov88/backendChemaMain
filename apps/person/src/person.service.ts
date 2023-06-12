@@ -22,7 +22,8 @@ export class PersonService {
               @InjectModel(Country) private countryRerepository: typeof Country,
               @InjectModel(Genre) private genreRepository: typeof Genre,
               @InjectModel(Occupation) private occupationRepository: typeof Occupation,
-              @InjectModel(PersonBestFilm) private bestFilmRepository: typeof PersonBestFilm
+              @InjectModel(PersonBestFilm) private bestFilmRepository: typeof PersonBestFilm,
+              @InjectModel(Film) private filmRepository: typeof Film
   ) {}
   async getAllPerson(){
     return this.personRepository.findAll()
@@ -56,7 +57,7 @@ export class PersonService {
   async updatePerson(dto: UpdatePersonDto){
     const person = await this.personRepository.update({ name: dto.newName }, { where: { name : dto.oldName }})
     if(!person)  throw new RpcException(
-      new NotFoundException(`Такого работника кино не сущесвует!`));
+      new NotFoundException(`Такого работника кино не сущесвует!`))
     else return person
   }
 
@@ -74,7 +75,7 @@ export class PersonService {
 
     const genres = await this.genreRepository.findAll({ attributes: ["id", "name"], raw: true });
     const occupation = await this.occupationRepository.findAll({ attributes: ["id", "name"], raw: true });
-    const bestFilm = await this.occupationRepository.findAll({ attributes: ["id", "name"], raw: true });
+    const bestFilm = await this.filmRepository.findAll({ attributes: ["id", "name"], raw: true });
 
     const genresPerson = dto.genre;
     const occupationsPerson = dto.occupation;
@@ -90,8 +91,11 @@ export class PersonService {
     }
 
     if(bestFilmPerson){
+
       const idBestFilm: number[] = bestFilm.filter(bestFilm => bestFilmPerson.includes(bestFilm.name)).map(id => id.id);
       await this.saveArrayToPersonBestFilm(createPerson.id, idBestFilm, this.bestFilmRepository)
+
+
     }
 
     if(country){
@@ -110,7 +114,6 @@ export class PersonService {
   }
   private async saveArrayToPersonOccupation(idPerson: number, arrayIdEntity: number[], model: any ){
     for (let i = 0; i < arrayIdEntity.length; i++){
-      console.log("occupationArray" + i)
 
       await model.create({ person_id: idPerson, occupation_id: arrayIdEntity[i] })
     }

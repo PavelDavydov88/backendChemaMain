@@ -10,14 +10,14 @@ import { catchError, throwError } from "rxjs";
 export class GenreController {
     constructor(@Inject('GENRE_SERVICE') private readonly genreService: ClientProxy) {}
 
-    @ApiOperation({ summary: ' Получить все жанры ' })
+    @ApiOperation({ summary: ' Получить все жанры ', tags: ['genre'] })
     @ApiResponse({ status: 200, type: Genre })
     @Get()
     async getAllGenres(){
         return  this.genreService.send(
             'getAllGenres', {});
     }
-    @ApiOperation({ summary: ' Создать жанр ' })
+    @ApiOperation({ summary: ' Создать жанр ', tags: ['genre'] })
     @ApiResponse({ status: 200, type: Genre })
     @UseGuards(JwtAuthGuard)
     @Roles('ADMIN')
@@ -29,7 +29,7 @@ export class GenreController {
         ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
     }
 
-    @ApiOperation({ summary: ' Обновить жанр ' })
+    @ApiOperation({ summary: ' Обновить жанр ', tags: ['genre'] })
     @ApiResponse({ status: 200, type: Genre })
     @UseGuards(JwtAuthGuard)
     @Roles('ADMIN')
@@ -41,7 +41,7 @@ export class GenreController {
         ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
     }
 
-    @ApiOperation({ summary: ' Удалить жанр ' })
+    @ApiOperation({ summary: ' Удалить жанр ', tags: ['genre'] })
     @ApiResponse({ status: 200, type: Genre })
     @UseGuards(JwtAuthGuard)
     @Roles('ADMIN')
