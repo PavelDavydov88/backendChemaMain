@@ -34,13 +34,14 @@ export class CountryService {
     return await this.countryRepository.update(dto, { where: { id: dto.id } });
   }
 
-  async deleteCountry(dto: DeleteCountryDto) {
-    const id = await this.countryRepository.findOne({ where: { id: dto.id } });
-    if (id) {
-      return await this.countryRepository.destroy({ where: { id: id.id } });
-    } else {
-      throw new RpcException(
-        new NotFoundException(`Такой страны не существует!`));
-    }
+  async deleteCountry(id: number) {
+    const country = await this.countryRepository.destroy({where : {
+      id: id
+      }})
+    if(country) return country
+    else throw new RpcException(
+        new NotFoundException('Такой страны не существует')
+    )
+
   }
 }

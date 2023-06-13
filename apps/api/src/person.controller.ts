@@ -37,7 +37,11 @@ export class PersonController {
       message: "completed"
     };
   }
-
+  // @UseInterceptors(FileInterceptor("image"))
+  // @Post('/file')
+  // async updateFile(@UploadedFile() image: any){
+  //   return await this.fileService.creatFile(image)
+  // }
   @ApiOperation({ summary: " Получить всех работников кино ", tags: ['person'] })
   @ApiResponse({ status: 200, type: Person })
   @Get()
@@ -60,8 +64,8 @@ export class PersonController {
 
   @ApiOperation({ summary: " Создать нового работника сферы кино ", tags: ['person'] })
   @ApiResponse({ status: 201, type: Person })
-  @UseGuards(JwtAuthGuard)
-  @Roles("ADMIN")
+  // @UseGuards(JwtAuthGuard)
+  // @Roles("ADMIN")
   @Post("")
   @UseInterceptors(FileInterceptor("image"))
   async createPerson(@Body() payload: CreatePersonDto, @UploadedFile() image: any) {
@@ -76,11 +80,11 @@ export class PersonController {
 
   @ApiOperation({ summary: " обновить существующего работника кино ", tags: ['person'] })
   @ApiResponse({ status: 204, type: Number})
-  @UseGuards(JwtAuthGuard)
-  @Roles("ADMIN")
-  @Put()
-  async updatePerson(@Body() payload: UpdatePersonDto) {
-    return this.personService.send("updatePerson", payload)
+  // @UseGuards(JwtAuthGuard)
+  // @Roles("ADMIN")
+  @Put('/:id')
+  async updatePerson(@Param("id") id: number, @Body() dto: UpdatePersonDto) {
+    return this.personService.send("updatePerson", {dto: dto, id: id})
       .pipe(catchError(error => throwError(
         () => new RpcException(error.response))));
   }

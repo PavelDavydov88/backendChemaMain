@@ -31,11 +31,16 @@ export class AuthController {
 
   @MessagePattern('createRole')
   async createRole(@Ctx() context: RmqContext, @Payload() dto: CreateRoleDto){
+    await this.sharedService.acknowledgeMessage(context)
     return await this.roleService.createRole(dto)
   }
 
   @MessagePattern('deleteProfile')
-  async deleteProfile(@Ctx() context: RmqContext, @Payload() id: number){
-    return await this.profileService.delete(id)
+  async deleteProfile(@Ctx() context: RmqContext, @Payload()req: Request,id: number, ){
+    await this.sharedService.acknowledgeMessage(context)
+
+    return await this.authService.deleteUser(id, req)
   }
+
+
 }

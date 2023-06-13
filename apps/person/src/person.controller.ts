@@ -35,10 +35,10 @@ export class PersonController {
   }
 
   @MessagePattern("updatePerson")
-  async updatePerson(@Ctx() context: RmqContext, @Payload() dto: UpdatePersonDto) {
+  async updatePerson(@Ctx() context: RmqContext, @Payload() payload: object) {
     await this.sharedService.acknowledgeMessage(context);
 
-    return await this.personService.updatePerson(dto);
+    return await this.personService.updatePerson(payload['dto'], payload['id']);
   }
 
   @MessagePattern("deletePerson")

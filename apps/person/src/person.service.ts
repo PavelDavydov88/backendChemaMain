@@ -54,8 +54,9 @@ export class PersonService {
       new NotFoundException(`Такого работника кино не существует!`));
     else return person
   }
-  async updatePerson(dto: UpdatePersonDto){
-    const person = await this.personRepository.update({ name: dto.newName }, { where: { name : dto.oldName }})
+  async updatePerson(dto: UpdatePersonDto, id: number){
+    // console.log(dto, id)
+    const person = await this.personRepository.update({ name: dto.newName }, { where: { id : id }})
     if(!person)  throw new RpcException(
       new NotFoundException(`Такого работника кино не сущесвует!`))
     else return person

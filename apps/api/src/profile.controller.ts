@@ -36,8 +36,11 @@ export class ProfileController{
     @ApiOperation({ summary: "Удалить профиль ", tags: ['profile'] })
     @ApiResponse({ status: 200 })
     @Delete('/:id')
-    async deleteProfile(@Param("id") payload: number){
-        return await this.authService.send('deleteProfile', payload)
+    async deleteProfile(@Param("id") payload: number, req: Request){
+        return await this.authService.send('deleteProfile', {
+            id: payload,
+            req: req
+        })
     }
 
 }

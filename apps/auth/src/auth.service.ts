@@ -60,6 +60,10 @@ export class AuthService {
     )
 
     }
+    async deleteUser(id: number, req: Request){
+    // const headerAuth = req.headers['authorization']
+      console.log(req, id);
+    }
 
 
 
