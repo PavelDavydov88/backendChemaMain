@@ -38,7 +38,6 @@ export class AuthService {
     }
     const hashPassword = await bcryptjs.hash(profileDto.password, 5);
     const user = await this.profileService.createProfile({...profileDto, password: hashPassword})
-    // console.log(await this.profileService.createProfile({...userDto, password: hashPassword}))
     return this.generateToken(user)
 
 
@@ -64,7 +63,6 @@ export class AuthService {
 
     }
     async deleteUser(id: number, authHeader: string){
-    // const headerAuth = req.headers['authorization']
       let result: boolean = false
       const userAuth = this.jwtService.verify(authHeader)
 
