@@ -12,25 +12,27 @@
 
 ## Архив с изображениями
 
-Скачать архив с изображениями для приложения и распаковать в корень проекта 
-- url .rar:  ...
+Скачать архив с изображениями для приложения и распаковать в корень проекта
+- url https://disk.yandex.ru/d/FZm3yCqhOWRHBQ
+
+## дамп БД
+
+Запустить контейнер с бд:
+- docker-compose up postgres
+
+Команда, чтобы загрузить базу в котейнер БД Postgres:
+- docker exec -i postgres pg_restore -U postgres -C -d dbkinopoisk < “C:\..\backendChema-main\dbkinopoisk.sql”
 
 ## Запуск docker-compose.yml
 
-Запустить docker-compose.yml расположенный в корне проекта
+Запустить docker-compose.yml расположенный в корне проекта:
 
-docker-compose up
+- docker-compose up
 
-## Архив БД 
 
-Скачать архив с БД приложения и распаковать в папку 
-- “C:\...\store”  
 
-Команда, чтобы загрузить базу к котейнер БД Postgres:
-- docker exec -i postgres psql -U postgres -d dbkinopoisk < “C:\...\store\backup.sql”
+## Swagger приложения:
 
-## Swagger приложения:  
- 
 http://localhost:4000/api/docs
 
 
@@ -41,3 +43,10 @@ http://localhost:4000/api/docs
 Если ссылка не работает обратитесь за новой к авторам
 
 https://app.getpostman.com/join-team?invite_code=9c95a03e81e92dc977a14fc0c117b924&target_code=c74233e8e848f9eb42f15d678319a1c8
+
+
+## АККАУНТ АДМИНИСТРАТОРА
+{
+"email": "123",
+"password": "123"
+}
