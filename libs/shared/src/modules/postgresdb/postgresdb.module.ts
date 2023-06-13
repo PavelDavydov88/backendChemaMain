@@ -21,6 +21,7 @@ import {Roles} from "@app/shared/decorators/role-auth.decorator";
 import {Role} from "@app/shared/models/role.model";
 import {User} from "@app/shared/models/user.model";
 import {UserRoles} from "@app/shared/models/user-role.model";
+import { CommentFilm } from "@app/shared/models/comment.model";
 
 @Module({
     imports: [
@@ -35,7 +36,9 @@ import {UserRoles} from "@app/shared/models/user-role.model";
             username: process.env.POSTGRES_USER,
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
-            models: [Country,
+            models: [
+              CommentFilm,
+              Country,
                 CountryViewer,
                 Film,
                 FilmCountry,

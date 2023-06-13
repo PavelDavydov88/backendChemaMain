@@ -1,14 +1,21 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, UseGuards } from "@nestjs/common";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpException,
+  HttpStatus,
+  Param,
+  Post,
+  Request,
+  UseGuards
+} from "@nestjs/common";
 import { CommentService } from "./comment/comment.service";
 import { CreatCommentFilmDto } from "../../../libs/shared/src/dtos/comment-dto/creatCommentFilm.dto";
-import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
 import { Roles } from "@app/shared/decorators/role-auth.decorator";
-import { catchError, throwError } from "rxjs";
-import { RpcException } from "@nestjs/microservices";
 import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { Genre } from "@app/shared/models/genre.model";
 import { CommentFilm } from "@app/shared/models/comment.model";
-import { Person } from "@app/shared/models/person.model";
+import { RoleGuard } from "../../auth/src/role.guard";
 
 @Controller("comment")
 export class CommentController {
@@ -17,7 +24,7 @@ export class CommentController {
   ) {
   }
 
-  @ApiOperation({ summary: ' Получить все комментарии к фильму' })
+  @ApiOperation({ summary: " Получить все комментарии к фильму" })
   @ApiResponse({ status: 200, type: CommentFilm })
   @Get("/:id")
   async getCommentsByFilmId(@Param("id") id: number) {
@@ -29,8 +36,8 @@ export class CommentController {
 
   @ApiOperation({ summary: "Создать новый комментарий" })
   @ApiResponse({ status: 201, type: CommentFilm })
-  @UseGuards(JwtAuthGuard)
-  @Roles('ADMIN', 'USER')
+  @UseGuards(RoleGuard)
+  @Roles("USER")
   @Post()
   async creatComment(@Body() creatCommentFilmDto: CreatCommentFilmDto) {
     return await this.commentService.creatCommentFilm(creatCommentFilmDto);
@@ -38,11 +45,11 @@ export class CommentController {
 
   @ApiOperation({ summary: "Удалить комментарий" })
   @ApiResponse({ status: 200, type: Number })
-  @UseGuards(JwtAuthGuard)
-  @Roles('ADMIN')
+  @UseGuards(RoleGuard)
+  @Roles("ADMIN", "USER")
   @Delete("/:id")
-  async deleteComment(@Param("id") id: number) {
-    return await this.commentService.deleteCommentFilm(id);
+  async deleteComment(@Request() req: Request, @Param("id") id: number) {
+    return await this.commentService.deleteCommentFilm(req, id);
   }
 
 }
