@@ -24,6 +24,9 @@ export class AuthService {
 
 
   }
+  async getAllProfiles(){
+    return await this.profileService.getAllProfiles()
+  }
 
   async registration(profileDto : CreateProfileDto){
     const candidate = await this.userService.getUserByEmail(profileDto.email)
@@ -60,9 +63,30 @@ export class AuthService {
     )
 
     }
-    async deleteUser(id: number, req: Request){
+    async deleteUser(id: number, authHeader: string){
     // const headerAuth = req.headers['authorization']
-      console.log(req, id);
+      let result: boolean = false
+      const userAuth = this.jwtService.verify(authHeader)
+
+      for(let el of userAuth.roles){
+
+        if(el.value == "ADMIN"){
+          result = true
+          break
+        }
+        if(el.UserRoles.profileId == id){
+          result = true
+          break
+        }
+      }
+      if(result == true){
+        return await this.profileService.delete(id)
+      }else{
+        throw new RpcException(
+            new UnauthorizedException('нет доступа')
+        )
+      }
+
     }
 
 

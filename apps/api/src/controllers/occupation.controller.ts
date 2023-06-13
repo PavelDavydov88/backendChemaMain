@@ -1,11 +1,12 @@
-import { Body, Controller, Delete, Get, Inject, Post, Put, UseGuards } from "@nestjs/common";
-import { ClientProxy, RpcException } from "@nestjs/microservices";
-import { catchError, throwError } from "rxjs";
-import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
-import { Roles } from "@app/shared/decorators/role-auth.decorator";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { Occupation } from "@app/shared/models/occupation.model";
-import { isNumber } from "@nestjs/common/utils/shared.utils";
+import {Body, Controller, Delete, Get, Inject, Param, Post, Put, UseGuards} from "@nestjs/common";
+import {ClientProxy, RpcException} from "@nestjs/microservices";
+import {catchError, throwError} from "rxjs";
+import {JwtAuthGuard} from "../../../auth/src/jwt-auth.guard";
+import {Roles} from "@app/shared/decorators/role-auth.decorator";
+import {ApiOperation, ApiResponse} from "@nestjs/swagger";
+import {Occupation} from "@app/shared/models/occupation.model";
+import {RoleGuard} from "../guard/role.guard";
+import {CreateOccupationDto} from "@app/shared/dtos/occupation-dto/createOccupation.dto";
 
 @Controller("occupation")
 export class OccupationController {
@@ -24,7 +25,8 @@ export class OccupationController {
   @ApiOperation({ summary: ' Создать новую профессию ', tags: ['occupation'] })
   @ApiResponse({ status: 201, type: Occupation })
   @UseGuards(JwtAuthGuard)
-  @Roles('ADMIN', 'USER')
+  @UseGuards(RoleGuard)
+  @Roles('ADMIN')
   @Post()
   async createOccupation(@Body() payload: any) {
     return this.occupationService.send(
@@ -36,12 +38,16 @@ export class OccupationController {
   @ApiOperation({ summary: ' Обновить существующую профессию ', tags: ['occupation'] })
   @ApiResponse({ status: 204, type: Number })
   @UseGuards(JwtAuthGuard)
-  @Roles('ADMIN')
-  @Put()
-  async updateOccupation(@Body() payload: any) {
+  @UseGuards(RoleGuard)
+  @Roles("ADMIN")
+  @Put('/:id')
+  async updateOccupation(@Param('id') id: number, @Body() dto: CreateOccupationDto) {
     return this.occupationService.send(
       "updateOccupation",
-      payload
+        {
+          id: id,
+          dto: dto
+        }
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
@@ -51,12 +57,13 @@ export class OccupationController {
   @ApiOperation({ summary: ' Удалить профессию ', tags: ['occupation'] })
   @ApiResponse({ status: 200, type: Number })
   @UseGuards(JwtAuthGuard)
-  @Roles('ADMIN')
-  @Delete()
-  async deleteOccupation(@Body() payload: any) {
+  @UseGuards(RoleGuard)
+  @Roles("ADMIN")
+  @Delete('/:id')
+  async deleteOccupation(@Param('id') id: number) {
     return this.occupationService.send(
       "deleteOccupation",
-      payload
+      id
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 

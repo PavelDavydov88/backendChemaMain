@@ -32,3 +32,12 @@ docker-compose up
 ## Swagger приложения:  
  
 http://localhost:4000/api/docs
+
+
+## Postman Workspace
+
+Ссылка на наше рабочее пространство где все готово для тестов
+
+Если ссылка не работает обратитесь за новой к авторам
+
+https://app.getpostman.com/join-team?invite_code=9c95a03e81e92dc977a14fc0c117b924&target_code=c74233e8e848f9eb42f15d678319a1c8

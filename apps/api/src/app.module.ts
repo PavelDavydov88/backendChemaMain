@@ -1,17 +1,17 @@
 import { Module } from '@nestjs/common';
 import {ConfigModule, ConfigService} from "@nestjs/config";
 import {SharedModule} from "@app/shared/modules/shared/shared.module";
-import {GenreController} from "./genre.controller";
-import {CountryController} from "./country.controller";
-import {PersonController} from "./person.controller";
+import {GenreController} from "./controllers/genre.controller";
+import {CountryController} from "./controllers/country.controller";
+import {PersonController} from "./controllers/person.controller";
 import {ServeStaticModule} from "@nestjs/serve-static";
 import * as path from 'path'
 import {FileModule} from "./file/file.module";
-import {ProfileController} from "./profile.controller";
+import {ProfileController} from "./controllers/profile.controller";
 import {JwtModule} from "@nestjs/jwt";
-import {FilmController} from "./film.controller";
-import {OccupationController} from "./occupation.controller";
-import {CommentController} from "./comment.controller";
+import {FilmController} from "./controllers/film.controller";
+import {OccupationController} from "./controllers/occupation.controller";
+import {CommentController} from "./controllers/comment.controller";
 import {CommentModule} from "./comment/comment.module";
 import {SequelizeModule} from "@nestjs/sequelize";
 import {CommentFilm} from "@app/shared/models/comment.model";

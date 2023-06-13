@@ -1,10 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectModel } from "@nestjs/sequelize";
-import { Country } from "@app/shared/models/country.model";
-import { CreateCountryDto } from "@app/shared/dtos/country-dto/createCountry.dto";
-import { UpdateCountryDto } from "@app/shared/dtos/country-dto/updateCountry.dto";
-import { RpcException } from "@nestjs/microservices";
-import { DeleteCountryDto } from "@app/shared/dtos/country-dto/deleteCountry.dto";
+import {Injectable, NotFoundException} from "@nestjs/common";
+import {InjectModel} from "@nestjs/sequelize";
+import {Country} from "@app/shared/models/country.model";
+import {CreateCountryDto} from "@app/shared/dtos/country-dto/createCountry.dto";
+import {RpcException} from "@nestjs/microservices";
 
 @Injectable()
 export class CountryService {
@@ -27,11 +25,11 @@ export class CountryService {
     }
   }
 
-  async updateCountry(dto: UpdateCountryDto) {
-    const country = await this.countryRepository.findOne({ raw: true, where: { id: dto.id } });
+  async updateCountry(id: number, dto: CreateCountryDto) {
+    const country = await this.countryRepository.update(dto, { where: { id: id } });
     if (!country) {throw new RpcException(
       new NotFoundException(`Такая страна не найдена!`));}
-    return await this.countryRepository.update(dto, { where: { id: dto.id } });
+    return country
   }
 
   async deleteCountry(id: number) {

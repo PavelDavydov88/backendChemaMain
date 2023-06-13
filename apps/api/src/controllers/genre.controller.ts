@@ -1,10 +1,12 @@
-import { Body, Controller, Delete, Get, Inject, Post, Put, UseGuards } from "@nestjs/common";
-import { ClientProxy, RpcException } from "@nestjs/microservices";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { Genre } from "@app/shared/models/genre.model";
-import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
-import { Roles } from "@app/shared/decorators/role-auth.decorator";
-import { catchError, throwError } from "rxjs";
+import {Body, Controller, Delete, Get, Inject, Param, Post, Put, UseGuards} from "@nestjs/common";
+import {ClientProxy, RpcException} from "@nestjs/microservices";
+import {ApiOperation, ApiResponse} from "@nestjs/swagger";
+import {Genre} from "@app/shared/models/genre.model";
+import {JwtAuthGuard} from "../../../auth/src/jwt-auth.guard";
+import {Roles} from "@app/shared/decorators/role-auth.decorator";
+import {catchError, throwError} from "rxjs";
+import {RoleGuard} from "../guard/role.guard";
+import {CreateGenreDto} from "@app/shared/dtos/genre-dto/createGenre.dto";
 
 @Controller('genre')
 export class GenreController {
@@ -20,7 +22,8 @@ export class GenreController {
     @ApiOperation({ summary: ' Создать жанр ', tags: ['genre'] })
     @ApiResponse({ status: 200, type: Genre })
     @UseGuards(JwtAuthGuard)
-    @Roles('ADMIN')
+    @UseGuards(RoleGuard)
+    @Roles("ADMIN")
     @Post()
     async createGenre(@Body() payload: any){
         return  this.genreService.send(
@@ -32,24 +35,29 @@ export class GenreController {
     @ApiOperation({ summary: ' Обновить жанр ', tags: ['genre'] })
     @ApiResponse({ status: 200, type: Genre })
     @UseGuards(JwtAuthGuard)
-    @Roles('ADMIN')
-    @Put()
-    async updataGenre(@Body() payload: any){
+    @UseGuards(RoleGuard)
+    @Roles("ADMIN")
+    @Put("/:id")
+    async updataGenre(@Param("id") id: number, @Body() dto: CreateGenreDto){
         return  this.genreService.send(
             'updateGenre',
-            payload
+            {
+                id: id,
+                dto: dto
+            }
         ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
     }
 
     @ApiOperation({ summary: ' Удалить жанр ', tags: ['genre'] })
     @ApiResponse({ status: 200, type: Genre })
     @UseGuards(JwtAuthGuard)
-    @Roles('ADMIN')
-    @Delete()
-    async deleteGenre(@Body() payload: any){
+    @UseGuards(RoleGuard)
+    @Roles("ADMIN")
+    @Delete("/:id")
+    async deleteGenre(@Param("id") id: number){
         return  this.genreService.send(
             'deleteGenre',
-            payload
+            id
         ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
     }
 }

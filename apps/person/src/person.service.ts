@@ -9,7 +9,6 @@ import {Genre} from "@app/shared/models/genre.model";
 import {Occupation} from "@app/shared/models/occupation.model";
 import {CreatePersonDto} from "@app/shared/dtos/person-dto/createPerson.dto";
 import {PersonBestFilm} from "@app/shared/models/person_best_film.model";
-import {UpdatePersonDto} from "@app/shared/dtos/person-dto/updatePerson.dto";
 import {RpcException} from "@nestjs/microservices";
 import {Film} from "@app/shared/models/film.model";
 
@@ -47,16 +46,17 @@ export class PersonService {
 
   }
   async deletePerson(id: number){
-    const person =  await this.personRepository.destroy({ where: {
-        id: id
-      }})
+    const person =  await this.personRepository.findByPk(id)
     if(!person) throw new RpcException(
       new NotFoundException(`Такого работника кино не существует!`));
-    else return person
+    else{ await this.personRepository.destroy({ where: { id: id } })
+    return person.picture_person
+    }
+
   }
-  async updatePerson(dto: UpdatePersonDto, id: number){
+  async updatePerson(dto: CreatePersonDto, id: number){
     // console.log(dto, id)
-    const person = await this.personRepository.update({ name: dto.newName }, { where: { id : id }})
+    const person = await this.personRepository.update({ name: dto.name }, { where: { id : id }})
     if(!person)  throw new RpcException(
       new NotFoundException(`Такого работника кино не сущесвует!`))
     else return person

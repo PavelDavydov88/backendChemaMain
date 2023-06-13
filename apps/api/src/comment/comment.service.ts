@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/sequelize";
-import { CommentFilm } from "@app/shared/models/comment.model";
 import { CreatCommentFilmDto } from "../../../../libs/shared/src/dtos/comment-dto/creatCommentFilm.dto";
 import { Op } from "sequelize";
 import { JwtService } from "@nestjs/jwt";
@@ -8,6 +7,7 @@ import { CreateProfileDto } from "@app/shared/dtos/auth-dto/create-profile.dto";
 import { Profile } from "@app/shared/models/profile.model";
 import { UserRoles } from "@app/shared/models/user-role.model";
 import * as process from "process";
+import {CommentFilm} from "@app/shared/models/comment.model";
 
 @Injectable()
 export class CommentService {
@@ -59,8 +59,24 @@ export class CommentService {
     return buildHierarchy(comments);
   }
 
-  async creatCommentFilm(creatCommentFilmDto: CreatCommentFilmDto) {
+  async creatCommentFilm(req : Request, creatCommentFilmDto: CreatCommentFilmDto) {
     try {
+      let g = 1
+      let result
+      const authHeader = req.headers["authorization"];
+      const token = authHeader.split(" ")[1];
+      const userAuth = this.jwtService.verify(token, {
+        secret: process.env.PRIVATE_KEY
+      });
+      console.log(userAuth)
+      for(let el of userAuth.roles){
+        if(el.UserRoles.profileId){
+          result = el.UserRoles.profileId
+          break
+        }
+      }
+      creatCommentFilmDto.profileId = result
+      console.log(creatCommentFilmDto)
       return await this.commentFilmRepository.create(creatCommentFilmDto);
     } catch (e) {
       throw new HttpException("Не удалось сохранить комментарий", HttpStatus.BAD_REQUEST);

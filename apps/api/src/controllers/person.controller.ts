@@ -3,6 +3,8 @@ import {
   Controller,
   Delete,
   Get,
+  HttpException,
+  HttpStatus,
   Inject,
   Param,
   Post,
@@ -17,10 +19,10 @@ import {Person} from "@app/shared/models/person.model";
 import {FileInterceptor} from "@nestjs/platform-express";
 import {CreatePersonDto} from "@app/shared/dtos/person-dto/createPerson.dto";
 import {Roles} from "@app/shared/decorators/role-auth.decorator";
-import {JwtAuthGuard} from "../../auth/src/jwt-auth.guard";
-import {FileService} from "./file/file.service";
-import {catchError, throwError} from "rxjs";
-import {UpdatePersonDto} from "@app/shared/dtos/person-dto/updatePerson.dto";
+import {JwtAuthGuard} from "../../../auth/src/jwt-auth.guard";
+import {FileService} from "../file/file.service";
+import {catchError, lastValueFrom, throwError} from "rxjs";
+import {RoleGuard} from "../guard/role.guard";
 
 @Controller("person")
 export class PersonController {
@@ -29,14 +31,7 @@ export class PersonController {
   ) {
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Roles("ADMIN")
-  @Get("/good")
-  async getInfo() {
-    return {
-      message: "completed"
-    };
-  }
+
   // @UseInterceptors(FileInterceptor("image"))
   // @Post('/file')
   // async updateFile(@UploadedFile() image: any){
@@ -64,8 +59,9 @@ export class PersonController {
 
   @ApiOperation({ summary: " Создать нового работника сферы кино ", tags: ['person'] })
   @ApiResponse({ status: 201, type: Person })
-  // @UseGuards(JwtAuthGuard)
-  // @Roles("ADMIN")
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RoleGuard)
+  @Roles("ADMIN")
   @Post("")
   @UseInterceptors(FileInterceptor("image"))
   async createPerson(@Body() payload: CreatePersonDto, @UploadedFile() image: any) {
@@ -80,10 +76,11 @@ export class PersonController {
 
   @ApiOperation({ summary: " обновить существующего работника кино ", tags: ['person'] })
   @ApiResponse({ status: 204, type: Number})
-  // @UseGuards(JwtAuthGuard)
-  // @Roles("ADMIN")
+  @UseGuards(JwtAuthGuard)
+  @UseGuards(RoleGuard)
+  @Roles("ADMIN")
   @Put('/:id')
-  async updatePerson(@Param("id") id: number, @Body() dto: UpdatePersonDto) {
+  async updatePerson(@Param("id") id: number, @Body() dto: CreatePersonDto) {
     return this.personService.send("updatePerson", {dto: dto, id: id})
       .pipe(catchError(error => throwError(
         () => new RpcException(error.response))));
@@ -92,12 +89,25 @@ export class PersonController {
   @ApiOperation({ summary: " Удалить работника кино ", tags: ['person'] })
   @ApiResponse({ status: 200, type: Number })
   @UseGuards(JwtAuthGuard)
+  @UseGuards(RoleGuard)
   @Roles("ADMIN")
   @Delete("/:id")
   async deletePerson(@Param("id") payload: number) {
-    return this.personService.send("deletePerson", payload)
+
+    const responce =  this.personService.send("deletePerson", payload)
       .pipe(catchError(error => throwError(
         () => new RpcException(error.response))));
+
+    const nameFile = await lastValueFrom(responce);
+    console.log("name = " + JSON.stringify(nameFile));
+    try {
+      if (typeof nameFile == "string") {
+        return await this.fileService.deleteFile(nameFile);
+      }
+      return nameFile;
+    } catch (e) {
+      throw new HttpException("Ошибка при удалении файла", HttpStatus.BAD_REQUEST);
+    }
   }
 
 }

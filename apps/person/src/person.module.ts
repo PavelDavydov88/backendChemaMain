@@ -1,6 +1,6 @@
-import { Module } from '@nestjs/common';
-import { PersonController } from './person.controller';
-import { PersonService } from './person.service';
+import {Module} from '@nestjs/common';
+import {PersonController} from './person.controller';
+import {PersonService} from './person.service';
 import {SharedService} from "@app/shared/services/shared/shared.service";
 import {ConfigModule} from "@nestjs/config";
 import {SharedModule} from "@app/shared/modules/shared/shared.module";

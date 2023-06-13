@@ -13,10 +13,12 @@ export class ProfileService {
                 private RoleService: RolesService,
                 private userService : UserService
     ) {}
+
+
     async createProfile(dtoProfile: CreateProfileDto){
         const profile = await this.profileRepository.create(dtoProfile)
         const user = await this.userService.createUser({...dtoProfile, email: dtoProfile.email, password: dtoProfile.password})
-        const role = await this.RoleService.getRolByValue("ADMIN")
+        const role = await this.RoleService.getRolByValue("USER")
         await user.$set('roles', [role.id])
         await user.$set('profile', [profile.id])
 

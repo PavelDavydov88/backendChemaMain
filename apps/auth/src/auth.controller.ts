@@ -36,10 +36,19 @@ export class AuthController {
   }
 
   @MessagePattern('deleteProfile')
-  async deleteProfile(@Ctx() context: RmqContext, @Payload()req: Request,id: number, ){
+  async deleteProfile(@Ctx() context: RmqContext, @Payload() payload: object ){
     await this.sharedService.acknowledgeMessage(context)
 
-    return await this.authService.deleteUser(id, req)
+    const id = payload['id']
+    const authHeader = payload['authHeader'].replace('Bearer ', '')
+
+    return await this.authService.deleteUser(id, authHeader)
+  }
+  @MessagePattern('getAllProfiles')
+  async getAllProfiles(@Ctx() context: RmqContext){
+    await this.sharedService.acknowledgeMessage(context)
+
+    return await this.authService.getAllProfiles()
   }
 
 

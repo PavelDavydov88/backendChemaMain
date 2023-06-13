@@ -1,10 +1,8 @@
-import {Body, Controller, Get} from '@nestjs/common';
-import { GenreService } from './genre.service';
+import {Controller} from '@nestjs/common';
+import {GenreService} from './genre.service';
 import {Ctx, MessagePattern, Payload, RmqContext} from "@nestjs/microservices";
 import {SharedService} from "@app/shared/services/shared/shared.service";
 import {CreateGenreDto} from "@app/shared/dtos/genre-dto/createGenre.dto";
-import {UpdateGenreDto} from "@app/shared/dtos/genre-dto/updateGenre.dto";
-import { DeleteGenreDto } from "@app/shared/dtos/genre-dto/deleteGenre.dto";
 
 @Controller()
 export class GenreController {
@@ -25,13 +23,15 @@ export class GenreController {
   }
 
   @MessagePattern("updateGenre")
-  async updateGenre(@Ctx() context: RmqContext, @Payload() dto: UpdateGenreDto){
+  async updateGenre(@Ctx() context: RmqContext, @Payload() payload: object){
     await this.sharedService.acknowledgeMessage(context)
-    return await this.genreService.updateGenre(dto)
+    const dto = payload['dto']
+    const id = payload['id']
+    return await this.genreService.updateGenre(id, dto)
   }
   @MessagePattern("deleteGenre")
-  async deleteGenre(@Ctx() context: RmqContext, @Payload() dto: DeleteGenreDto){
+  async deleteGenre(@Ctx() context: RmqContext, @Payload() id: number){
     await this.sharedService.acknowledgeMessage(context)
-    return await this.genreService.deleteGenre(dto)
+    return await this.genreService.deleteGenre(id)
   }
 }

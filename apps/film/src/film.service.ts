@@ -1,21 +1,19 @@
-import { Film } from "@app/shared/models/film.model";
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectModel } from "@nestjs/sequelize";
-import { FilterFilmDto } from "@app/shared/dtos/film-dto/filterFilm.dto";
-import { FilmCountry } from "@app/shared/models/film_country.model";
-import { Country } from "@app/shared/models/country.model";
-import { Genre } from "@app/shared/models/genre.model";
-import { FilmGenre } from "@app/shared/models/film_genre.model";
-import { FilmOccupation } from "@app/shared/models/film_occupation.model";
-import { Occupation } from "@app/shared/models/occupation.model";
-import { Person } from "@app/shared/models/person.model";
-import { MainActor } from "@app/shared/models/main_actor.model";
-import { SimilarFilm } from "@app/shared/models/similar_film.model";
-import { CreatFilmDto } from "@app/shared/dtos/film-dto/creatFilm.dto";
-import { UpdateFilmDto } from "@app/shared/dtos/film-dto/updateFilm.dto";
-import { DeleteFilmDto } from "@app/shared/dtos/film-dto/deleteFilm.dto";
-import sequelize, { Op } from "sequelize";
-import { RpcException } from "@nestjs/microservices";
+import {Film} from "@app/shared/models/film.model";
+import {Injectable, NotFoundException} from "@nestjs/common";
+import {InjectModel} from "@nestjs/sequelize";
+import {FilterFilmDto} from "@app/shared/dtos/film-dto/filterFilm.dto";
+import {FilmCountry} from "@app/shared/models/film_country.model";
+import {Country} from "@app/shared/models/country.model";
+import {Genre} from "@app/shared/models/genre.model";
+import {FilmGenre} from "@app/shared/models/film_genre.model";
+import {FilmOccupation} from "@app/shared/models/film_occupation.model";
+import {Occupation} from "@app/shared/models/occupation.model";
+import {Person} from "@app/shared/models/person.model";
+import {MainActor} from "@app/shared/models/main_actor.model";
+import {SimilarFilm} from "@app/shared/models/similar_film.model";
+import {CreatFilmDto} from "@app/shared/dtos/film-dto/creatFilm.dto";
+import sequelize, {Op} from "sequelize";
+import {RpcException} from "@nestjs/microservices";
 
 @Injectable()
 export class FilmService {
@@ -142,7 +140,8 @@ export class FilmService {
     let response = [];
 
     const idGenreFilter = (await this.genreRepository.findOne(
-      { where: { name: genre }, raw: true, attributes: ["id"] }));
+        { where: { name: genre }, raw: true, attributes: ["id"] }));
+
     if (idGenreFilter != null) {
       const filterGenre = await this.filmGenreRepository.findAll({
         where: { genre_id: idGenreFilter.id },
@@ -150,11 +149,13 @@ export class FilmService {
         attributes: ["film_id"]
       });
       const arrayFilmIdGenre: number[] = filterGenre.map(film => film.film_id);
+      if (arrayFilmIdGenre.length == 0) throw new RpcException(new NotFoundException('Неправильно задан параметр фильтра'))
       response.push(arrayFilmIdGenre);
     }
 
+
     const idCountryFilter = (await this.countryRepository.findOne(
-      { where: { name: country }, raw: true, attributes: ["id"] }));
+        { where: { name: country }, raw: true, attributes: ["id"] }));
     if (idCountryFilter != null) {
       const filterCountry = await this.filmCountryRepository.findAll({
         where: { country_id: idCountryFilter.id },
@@ -162,24 +163,38 @@ export class FilmService {
         attributes: ["film_id"]
       });
       const arrayFilmIdCountry: number[] = filterCountry.map(film => film.film_id);
+      if (arrayFilmIdCountry.length == 0) throw new RpcException(new NotFoundException('Неправильно задан параметр фильтра'))
+
       response.push(arrayFilmIdCountry);
     }
 
-    const filterRatingMin = (await this.filmRepository.findAll({
+    const filterRatingMin = await this.filmRepository.findAll({
       where: { rating: { [Op.gte]: filterFilmDto.ratingMin } }
-    }));
+    });
     if (filterRatingMin.length) {
       const arrayFilmIdRatingMin: number[] = filterRatingMin.map(film => film.id);
+      if (arrayFilmIdRatingMin.length == 0) throw new RpcException(new NotFoundException('Неправильно задан параметр фильтра'))
+
       response.push(arrayFilmIdRatingMin);
+    }else{
+      throw new RpcException(new NotFoundException('Неправильно задан параметр фильтра'))
+
     }
 
     const filterRatingMax = await this.filmRepository.findAll({
       where: { rating: { [Op.lte]: filterFilmDto.ratingMax } }
     });
-    console.log("filterRatingMax" + filterRatingMax);
     if (filterRatingMax.length) {
       const arrayFilmIdRatingMax: number[] = filterRatingMax.map(film => film.id);
+      console.log('ratingMax ' + arrayFilmIdRatingMax.length)
+
+
       response.push(arrayFilmIdRatingMax);
+
+
+    }else{
+      throw new RpcException(new NotFoundException('Неправильно задан параметр фильтра'))
+
     }
 
     const filterEstimationMin = await this.filmRepository.findAll({
@@ -187,7 +202,12 @@ export class FilmService {
     });
     if (filterEstimationMin.length) {
       const arrayFilmIdEstimationMin: number[] = filterEstimationMin.map(film => film.id);
+      if (arrayFilmIdEstimationMin.length == 0) throw new RpcException(new NotFoundException('Неправильно задан параметр фильтра'))
+
       response.push(arrayFilmIdEstimationMin);
+    }else{
+      throw new RpcException(new NotFoundException('Неправильно задан параметр фильтра'))
+
     }
 
     const filterEstimationMax = await this.filmRepository.findAll({
@@ -195,11 +215,16 @@ export class FilmService {
     });
     if (filterEstimationMax.length) {
       const arrayFilmIdEstimationMax: number[] = filterEstimationMax.map(film => film.id);
+      if (arrayFilmIdEstimationMax.length == 0) throw new RpcException(new NotFoundException('Неправильно задан параметр фильтра'))
+
       response.push(arrayFilmIdEstimationMax);
+    }else{
+      throw new RpcException(new NotFoundException('Неправильно задан параметр фильтра'))
+
     }
 
     const idArtistFilter = (await this.personRepository.findOne(
-      { where: { name: artist }, raw: true, attributes: ["id"] }));
+        { where: { name: artist }, raw: true, attributes: ["id"] }));
     if (idArtistFilter != null) {
       const filterArtist = await this.filmOccupationRepository.findAll({
         where: { person_id: idArtistFilter.id },
@@ -207,11 +232,13 @@ export class FilmService {
         attributes: [[sequelize.fn("DISTINCT", sequelize.col("film_id")), "film_id"]]
       });
       const arrayFilmIdArtist: number[] = filterArtist.map(film => film.film_id);
+      if (arrayFilmIdArtist.length == 0) throw new RpcException(new NotFoundException('Неправильно задан параметр фильтра'))
+
       response.push(arrayFilmIdArtist);
     }
 
     const idWriterFilter = (await this.personRepository.findOne(
-      { where: { name: writer }, raw: true, attributes: ["id"] }));
+        { where: { name: writer }, raw: true, attributes: ["id"] }));
     if (idWriterFilter != null) {
       const filterWriter = await this.filmOccupationRepository.findAll({
         where: { person_id: idWriterFilter.id },
@@ -219,6 +246,8 @@ export class FilmService {
         attributes: [[sequelize.fn("DISTINCT", sequelize.col("film_id")), "film_id"]]
       });
       const arrayFilmIdWriter: number[] = filterWriter.map(film => film.film_id);
+      if (arrayFilmIdWriter.length == 0) throw new RpcException(new NotFoundException('Неправильно задан параметр фильтра'))
+
       response.push(arrayFilmIdWriter);
     }
 
@@ -237,13 +266,14 @@ export class FilmService {
     };
 
     for (let i = 1; i < response.length; i++) {
+      // console.log(distinctId)
       distinctId = intersect(distinctId, response[i]);
     }
     if ((distinctId == null) || (!distinctId.length)) throw new RpcException(
-      new NotFoundException(`Нет подходящих фильмов с такими условиями ${JSON.stringify(filterFilmDto)}!`));
+        new NotFoundException(`Нет подходящих фильмов с такими условиями ${JSON.stringify(filterFilmDto)}!`));
 
     const finalFilmFilter: Film[] = await this.filmRepository.findAll({
-      where: { "id": distinctId },
+      where: { id: distinctId },
       offset: offset,
       limit: limit
     });
@@ -355,19 +385,19 @@ export class FilmService {
     }
   }
 
-  async updateFilm(dto: UpdateFilmDto) {
-    const film = await this.filmRepository.findOne({ raw: true, where: { "name": dto.oldName } });
+  async updateFilm(id: number,dto: CreatFilmDto) {
+    const film = await this.filmRepository.update({ name: dto.name }, { where: { id: id } });
     if (!film) throw new RpcException(
       new NotFoundException(`Такой фильм не найден!`));
-    return await this.filmRepository.update({ name: dto.newName }, { where: { id: film.id } });
+    return film
   }
 
-  async deleteFilm(dto: DeleteFilmDto) {
-    const id = await this.filmRepository.findOne({ where: { name: dto.name } });
-    if (id) {
-      await this.filmRepository.destroy({ where: { id: id.id } });
-      console.log("id.picture_film = " + id.picture_film);
-      return id.picture_film;
+  async deleteFilm(id: number) {
+    const film = await this.filmRepository.findByPk(id);
+    if (film) {
+      await this.filmRepository.destroy({ where: { id: id } });
+      console.log("id.picture_film = " + film.picture_film);
+      return film.picture_film;
     } else {
       throw new RpcException(
         new NotFoundException(`Такой фильм не найден!`));

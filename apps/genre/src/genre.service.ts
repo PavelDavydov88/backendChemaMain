@@ -1,10 +1,8 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { InjectModel } from "@nestjs/sequelize";
-import { Genre } from "@app/shared/models/genre.model";
-import { CreateGenreDto } from "@app/shared/dtos/genre-dto/createGenre.dto";
-import { UpdateGenreDto } from "@app/shared/dtos/genre-dto/updateGenre.dto";
-import { DeleteGenreDto } from "@app/shared/dtos/genre-dto/deleteGenre.dto";
-import { RpcException } from "@nestjs/microservices";
+import {Injectable, NotFoundException} from "@nestjs/common";
+import {InjectModel} from "@nestjs/sequelize";
+import {Genre} from "@app/shared/models/genre.model";
+import {CreateGenreDto} from "@app/shared/dtos/genre-dto/createGenre.dto";
+import {RpcException} from "@nestjs/microservices";
 
 @Injectable()
 export class GenreService {
@@ -30,19 +28,19 @@ export class GenreService {
 
   }
 
-  async updateGenre(dto: UpdateGenreDto) {
-    const genre = await this.genreRepository.findOne({ raw: true, where: { id: dto.id } });
+  async updateGenre(id: number,dto: CreateGenreDto) {
+    const genre = await this.genreRepository.update(dto, { where: { id: id } });
     if (!genre) {
       throw new RpcException(
         new NotFoundException(`Такой жанр не найден!`));
     }
-    return await this.genreRepository.update(dto, { where: { id: dto.id } });
+    return genre
   }
 
-  async deleteGenre(dto: DeleteGenreDto) {
-    const id = await this.genreRepository.findOne({ where: { id: dto.id } });
-    if (id) {
-      return await this.genreRepository.destroy({ where: { id: id.id } });
+  async deleteGenre(id: number) {
+    const genre = await this.genreRepository.destroy({ where: { id: id } });
+    if (genre) {
+      return genre
     } else {
       throw new RpcException(
         new NotFoundException(`Такого жанра нет!`));

@@ -14,16 +14,17 @@ import {
   UseGuards,
   UseInterceptors
 } from "@nestjs/common";
-import { ClientProxy, RpcException } from "@nestjs/microservices";
-import { FileInterceptor } from "@nestjs/platform-express";
-import { catchError, lastValueFrom, throwError } from "rxjs";
-import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
-import { Roles } from "@app/shared/decorators/role-auth.decorator";
-import { FileService } from "./file/file.service";
-import { FilterFilmDto } from "@app/shared/dtos/film-dto/filterFilm.dto";
-import { CreatFilmDto } from "@app/shared/dtos/film-dto/creatFilm.dto";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { Film } from "@app/shared/models/film.model";
+import {ClientProxy, RpcException} from "@nestjs/microservices";
+import {FileInterceptor} from "@nestjs/platform-express";
+import {catchError, lastValueFrom, throwError} from "rxjs";
+import {JwtAuthGuard} from "../../../auth/src/jwt-auth.guard";
+import {Roles} from "@app/shared/decorators/role-auth.decorator";
+import {FileService} from "../file/file.service";
+import {FilterFilmDto} from "@app/shared/dtos/film-dto/filterFilm.dto";
+import {CreatFilmDto} from "@app/shared/dtos/film-dto/creatFilm.dto";
+import {ApiOperation, ApiResponse} from "@nestjs/swagger";
+import {Film} from "@app/shared/models/film.model";
+import {RoleGuard} from "../guard/role.guard";
 
 @Controller("film")
 export class FilmController {
@@ -33,12 +34,9 @@ export class FilmController {
   ) {
   }
 
-  @Get("/hi")
-  async getHi() {
-    return "hello from film controller!";
-  }
 
-  @ApiOperation({ summary: " Получить все фильмы " })
+
+  @ApiOperation({ summary: " Получить все фильмы ", tags: ['film']  })
   @ApiResponse({ status: 200, type: Film })
   @Get("/all")
   async getFilmAllFilms() {
@@ -50,7 +48,7 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Получить фильм по Id " })
+  @ApiOperation({ summary: " Получить фильм по Id ", tags: ['film']  })
   @ApiResponse({ status: 200, type: Film })
   @Get("/:id")
   async getFilmById(@Param("id") id: number) {
@@ -62,7 +60,7 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Получить все фильмы по фильтру" })
+  @ApiOperation({ summary: " Получить все фильмы по фильтру", tags: ['film']  })
   @ApiResponse({ status: 200, type: Film })
   @Get()
   async getFilms(@Query() filterFilmDto: FilterFilmDto) {
@@ -74,7 +72,7 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Получить всех режиссеров " })
+  @ApiOperation({ summary: " Получить всех режиссеров ", tags: ['film']  })
   @ApiResponse({ status: 200, type: Film })
   @Get("/search/writers")
   async searchWriters(@Query("query") query: string) {
@@ -86,9 +84,10 @@ export class FilmController {
     );
   }
 
-  @ApiOperation({ summary: " Создать новый фильм " })
+  @ApiOperation({ summary: " Создать новый фильм ", tags: ['film']  })
   @ApiResponse({ status: 201, type: Film })
   @UseGuards(JwtAuthGuard)
+  @UseGuards(RoleGuard)
   @Roles("ADMIN")
   @Post()
   @UseInterceptors(FileInterceptor("image"))
@@ -105,27 +104,32 @@ export class FilmController {
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " обновить название фильма " })
+  @ApiOperation({ summary: " обновить название фильма ", tags: ['film']  })
   @ApiResponse({ status: 204, type: Number })
   @UseGuards(JwtAuthGuard)
+  @UseGuards(RoleGuard)
   @Roles("ADMIN")
-  @Put()
-  async updateFilm(@Body() payload: any) {
+  @Put("/:id")
+  async updateFilm(@Param("id") id: number, @Body() dto: CreatFilmDto) {
     return this.filmService.send(
       "update-film",
-      payload
+        {
+          id: id,
+          dto: dto
+        }
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
-  @ApiOperation({ summary: " Удалить фильм " })
+  @ApiOperation({ summary: " Удалить фильм ", tags: ['film'] })
   @ApiResponse({ status: 200, type: Number })
   @UseGuards(JwtAuthGuard)
+  @UseGuards(RoleGuard)
   @Roles("ADMIN")
-  @Delete()
-  async deleteFilm(@Body() payload: any) {
+  @Delete("/:id")
+  async deleteFilm(@Param("id") id: number) {
     const response = await this.filmService.send(
       "delete-film",
-      payload
+      id
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
     const nameFile = await lastValueFrom(response);
     console.log("name = " + JSON.stringify(nameFile));

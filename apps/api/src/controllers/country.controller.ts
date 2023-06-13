@@ -1,12 +1,12 @@
 import {Body, Controller, Delete, Get, Inject, Param, Post, Put, UseGuards} from "@nestjs/common";
-import { ClientProxy, RpcException } from "@nestjs/microservices";
-import { ApiOperation, ApiResponse } from "@nestjs/swagger";
-import { Country } from "@app/shared/models/country.model";
-import { catchError, throwError } from "rxjs";
-import { JwtAuthGuard } from "../../auth/src/jwt-auth.guard";
-import { Roles } from "@app/shared/decorators/role-auth.decorator";
+import {ClientProxy, RpcException} from "@nestjs/microservices";
+import {ApiOperation, ApiResponse} from "@nestjs/swagger";
+import {Country} from "@app/shared/models/country.model";
+import {catchError, throwError} from "rxjs";
+import {JwtAuthGuard} from "../../../auth/src/jwt-auth.guard";
+import {Roles} from "@app/shared/decorators/role-auth.decorator";
 import {CreateCountryDto} from "@app/shared/dtos/country-dto/createCountry.dto";
-import {UpdateCountryDto} from "@app/shared/dtos/country-dto/updateCountry.dto";
+import {RoleGuard} from "../guard/role.guard";
 
 @Controller("country")
 export class CountryController {
@@ -25,7 +25,8 @@ export class CountryController {
   @ApiOperation({ summary: " Создать страну ", tags: ['country'] })
   @ApiResponse({ status: 200, type: Country })
   @UseGuards(JwtAuthGuard)
-  @Roles('ADMIN')
+  @UseGuards(RoleGuard)
+  @Roles("ADMIN")
   @Post()
   async createCountry(@Body() payload: CreateCountryDto) {
     return this.countryService.send(
@@ -37,20 +38,24 @@ export class CountryController {
   @ApiOperation({ summary: " Обновить страну ", tags: ['country'] })
   @ApiResponse({ status: 200, type: Country })
   @UseGuards(JwtAuthGuard)
-  @Roles('ADMIN')
-  @Put()
-  async updateCountry(@Body() payload: UpdateCountryDto) {
+  @UseGuards(RoleGuard)
+  @Roles("ADMIN")
+  @Put("/:id")
+  async updateCountry(@Param("id")id: number, @Body() dto: CreateCountryDto) {
     return this.countryService.send(
       "updateCountry",
-      payload
+        {
+          id: id,
+          dto: dto
+        }
     ).pipe(catchError(error => throwError(() => new RpcException(error.response))));
   }
 
   @ApiOperation({ summary: " Удалить страну ", tags: ['country'] })
   @ApiResponse({ status: 200 })
   @UseGuards(JwtAuthGuard)
-  @Roles('ADMIN')
-
+  @UseGuards(RoleGuard)
+  @Roles("ADMIN")
   @Delete("/:id")
   async deleteCountry(@Param("id")payload: number) {
     return this.countryService.send(
